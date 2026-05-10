@@ -80,14 +80,14 @@ export default async function PortfolioPage() {
                         {item.caption ? <div className="mt-2 text-sm text-foreground/65">{item.caption}</div> : null}
                       </div>
                       {item.link?.length ? (
-                        <a
+                        <Link
                           href={item.link}
                           target="_blank"
                           rel="noreferrer"
                           className="shrink-0 rounded-full bg-[color:var(--accent)] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-[color:var(--accent)]/90 active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
                         >
                           {page.openLinkText}
-                        </a>
+                        </Link>
                       ) : (
                         <div className="shrink-0 rounded-full border border-foreground/10 bg-background px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">
                           {page.noLinkText}

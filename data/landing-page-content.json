@@ -1,0 +1,393 @@
+﻿{
+    "navbar":  {
+                   "brandName":  "Virgo Social",
+                   "menu":  [
+                                {
+                                    "label":  "About",
+                                    "href":  "#about"
+                                },
+                                {
+                                    "label":  "Services",
+                                    "href":  "#services"
+                                },
+                                {
+                                    "label":  "Portfolio",
+                                    "href":  "#portfolio"
+                                },
+                                {
+                                    "label":  "Contact",
+                                    "href":  "#contact"
+                                }
+                            ],
+                   "ctaText":  "Let\u0027s Talk",
+                   "ctaLink":  "#contact"
+               },
+    "hero":  {
+                 "badge":  "SOCIAL MEDIA MANAGER",
+                 "title":  "MUHAMMAD RIYADHUL JINAN NASUTION",
+                 "description":  "I help brands look sharp, sound confident, and sell consistently with content systems built for speed and clarity.",
+                 "imageUrl":  "https://images.unsplash.com/photo-1520975958225-7cc45f0f53d5?auto=format\u0026fit=crop\u0026w=1400\u0026q=80",
+                 "ctaText":  "Book a Call",
+                 "ctaLink":  "#contact",
+                 "tags":  [
+                              "Content Creation",
+                              "Digital Sales",
+                              "Social Media"
+                          ]
+             },
+    "brandStrip":  {
+                       "items":  [
+                                     {
+                                         "name":  "Studio Mono",
+                                         "link":  ""
+                                     },
+                                     {
+                                         "name":  "Neon Goods",
+                                         "link":  ""
+                                     },
+                                     {
+                                         "name":  "Editorial Co.",
+                                         "link":  ""
+                                     },
+                                     {
+                                         "name":  "Kopi Kecil",
+                                         "link":  ""
+                                     },
+                                     {
+                                         "name":  "Audy Partners",
+                                         "link":  ""
+                                     }
+                                 ]
+                   },
+    "introduction":  {
+                         "title":  "MY INTRODUCTION",
+                         "description":  "Iâ€™m a social media manager focused on editorial visuals and conversion-minded storytelling. Minimal chaos, maximum momentum.",
+                         "imageUrl":  "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format\u0026fit=crop\u0026w=1400\u0026q=80",
+                         "badgeText":  "Available for projects"
+                     },
+    "about":  {
+                  "title":  "ABOUT ME",
+                  "label":  "Who I am?",
+                  "description":  "I build a repeatable content engine: idea research, scripting, production direction, posting rhythm, and performance feedback loops.",
+                  "images":  [
+                                 {
+                                     "imageUrl":  "https://images.unsplash.com/photo-1520975869018-84f4c535d2d3?auto=format\u0026fit=crop\u0026w=900\u0026q=80",
+                                     "alt":  "Portrait 1"
+                                 },
+                                 {
+                                     "imageUrl":  "https://images.unsplash.com/photo-1520975744055-1f7e1f39a3d2?auto=format\u0026fit=crop\u0026w=900\u0026q=80",
+                                     "alt":  "Portrait 2"
+                                 },
+                                 {
+                                     "imageUrl":  "https://images.unsplash.com/photo-1520975682035-9f2d9965e5a2?auto=format\u0026fit=crop\u0026w=900\u0026q=80",
+                                     "alt":  "Portrait 3"
+                                 }
+                             ]
+              },
+    "portfolio":  {
+                      "title":  "PORTFOLIO",
+                      "items":  [
+                                    {
+                                        "type":  "video",
+                                        "title":  "Reels Campaign: Launch Week",
+                                        "thumbnailUrl":  "https://images.unsplash.com/photo-1520975868797-07dd1a3b2a6b?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                                        "link":  "",
+                                        "caption":  "Story-driven reels + offer stack."
+                                    },
+                                    {
+                                        "type":  "photo",
+                                        "title":  "Product Editorial Set",
+                                        "thumbnailUrl":  "https://images.unsplash.com/photo-1520975779488-2b0b8b0e1c4a?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                                        "link":  "",
+                                        "caption":  "Cream background + neon accents."
+                                    },
+                                    {
+                                        "type":  "photo",
+                                        "title":  "Carousel: Pricing Breakdown",
+                                        "thumbnailUrl":  "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                                        "link":  "",
+                                        "caption":  "Clear, scannable, conversion-first."
+                                    }
+                                ]
+                  },
+    "services":  {
+                     "title":  "SERVICES \u0026 PRICELIST",
+                     "subtitle":  "LET\u0027S WORK TOGETHER",
+                     "viewAllText":  "View all services",
+                     "viewAllLink":  "/services",
+                     "items":  [
+                                   {
+                                       "name":  "Starter Support",
+                                       "description":  "Perfect for businesses needing light ongoing support.",
+                                       "price":  "",
+                                       "hoursPerWeek":  "10 hours per week",
+                                       "includes":  [
+                                                        "Administrative tasks",
+                                                        "Email management",
+                                                        "Scheduling",
+                                                        "Basic social media assistance",
+                                                        "Canva support",
+                                                        "Customer communication"
+                                                    ],
+                                       "idealFor":  "Small businesses, solo entrepreneurs, creators.",
+                                       "imageUrl":  "https://images.unsplash.com/photo-1554774853-b414d2a2b0d2?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                                       "buttonText":  "Get Started",
+                                       "buttonLink":  "/#contact",
+                                       "isHighlighted":  false,
+                                       "title":  "Custom"
+                                   },
+                                   {
+                                       "name":  "Growth Support",
+                                       "description":  "For businesses needing more consistent digital and operational support.",
+                                       "price":  "",
+                                       "hoursPerWeek":  "20 hours per week",
+                                       "includes":  [
+                                                        "Administrative support",
+                                                        "Content scheduling",
+                                                        "Social media assistance",
+                                                        "Graphic design support",
+                                                        "Customer support",
+                                                        "Organization systems",
+                                                        "Research \u0026 reporting"
+                                                    ],
+                                       "idealFor":  "Growing brands and busy business owners.",
+                                       "imageUrl":  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                                       "buttonText":  "Get Started",
+                                       "buttonLink":  "/#contact",
+                                       "isHighlighted":  true,
+                                       "title":  "Custom"
+                                   },
+                                   {
+                                       "name":  "Full Support",
+                                       "description":  "Comprehensive virtual assistance and digital support.",
+                                       "price":  "",
+                                       "hoursPerWeek":  "40 hours per week",
+                                       "includes":  [
+                                                        "Priority support",
+                                                        "Ongoing admin management",
+                                                        "Social media support",
+                                                        "Creative assistance",
+                                                        "Business organization",
+                                                        "Workflow support",
+                                                        "Flexible task management"
+                                                    ],
+                                       "idealFor":  "Businesses needing regular, hands-on support.",
+                                       "imageUrl":  "https://images.unsplash.com/photo-1553484771-047a44eee27d?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                                       "buttonText":  "Get Started",
+                                       "buttonLink":  "/#contact",
+                                       "isHighlighted":  false,
+                                       "title":  "Custom"
+                                   },
+                                   {
+                                       "name":  "Custom Support",
+                                       "description":  "Tailored services based on business needs.",
+                                       "price":  "",
+                                       "hoursPerWeek":  "",
+                                       "includes":  [
+                                                        "Project-based work",
+                                                        "Flexible hours",
+                                                        "Specialized support",
+                                                        "Mixed service requests"
+                                                    ],
+                                       "idealFor":  "Brands needing a tailored scope.",
+                                       "imageUrl":  "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                                       "buttonText":  "Request Custom",
+                                       "buttonLink":  "/#contact",
+                                       "isHighlighted":  false,
+                                       "title":  "Custom"
+                                   }
+                               ]
+                 },
+    "servicesDetails":  {
+                            "name":  "Virgo Social Services",
+                            "intro":  "Support that keeps your business organized, creative, and consistent. Pick a lane or combine support areas into one workflow.",
+                            "categories":  [
+                                               {
+                                                   "slug":  "administrative-support",
+                                                   "title":  "Administrative Support",
+                                                   "description":  "Inbox, calendar, docs, and the operational tasks that keep things running.",
+                                                   "heroImageUrl":  "https://images.unsplash.com/photo-1554774853-b414d2a2b0d2?auto=format\u0026fit=crop\u0026w=1400\u0026q=80",
+                                                   "bullets":  [
+                                                                   "Email \u0026 inbox management",
+                                                                   "Calendar management \u0026 appointment scheduling",
+                                                                   "Data entry \u0026 database management",
+                                                                   "Customer service support",
+                                                                   "Document preparation \u0026 formatting",
+                                                                   "Travel planning \u0026 bookings",
+                                                                   "File organization \u0026 cloud management",
+                                                                   "CRM updates \u0026 organization",
+                                                                   "General business assistance"
+                                                               ]
+                                               },
+                                               {
+                                                   "slug":  "creative-support",
+                                                   "title":  "Creative Support",
+                                                   "description":  "Design, templates, editing, and content planning to keep your brand looking sharp.",
+                                                   "heroImageUrl":  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format\u0026fit=crop\u0026w=1400\u0026q=80",
+                                                   "bullets":  [
+                                                                   "Canva graphic design",
+                                                                   "Brand template creation",
+                                                                   "Marketing materials",
+                                                                   "Digital product design",
+                                                                   "Video editing",
+                                                                   "Content planning",
+                                                                   "Photography/Videography"
+                                                               ]
+                                               },
+                                               {
+                                                   "slug":  "social-media-support",
+                                                   "title":  "Social Media Support",
+                                                   "description":  "Posting systems, captions, research, and day-to-day channel execution.",
+                                                   "heroImageUrl":  "https://images.unsplash.com/photo-1520975607369-1b7f0fb4f3d3?auto=format\u0026fit=crop\u0026w=1400\u0026q=80",
+                                                   "bullets":  [
+                                                                   "Social media management",
+                                                                   "Content scheduling",
+                                                                   "Caption writing",
+                                                                   "Hashtag research",
+                                                                   "Community engagement",
+                                                                   "Content calendar planning",
+                                                                   "Meta Ads",
+                                                                   "Instagram support",
+                                                                   "TikTok support",
+                                                                   "Facebook page management",
+                                                                   "LinkedIn content support"
+                                                               ]
+                                               }
+                                           ],
+                            "industries":  [
+                                               {
+                                                   "slug":  "real-estate-support",
+                                                   "title":  "Real Estate Support",
+                                                   "description":  "Listing-ready systems, showings calendar, and consistent marketing support.",
+                                                   "heroImageUrl":  "",
+                                                   "bullets":  [
+                                                                   "Content + listing support",
+                                                                   "Scheduling + follow-ups",
+                                                                   "Client communication support"
+                                                               ]
+                                               },
+                                               {
+                                                   "slug":  "spiritual-wellness-business-support",
+                                                   "title":  "Spiritual \u0026 Wellness Business Support",
+                                                   "description":  "Gentle, consistent content + admin that matches your brand voice.",
+                                                   "heroImageUrl":  "",
+                                                   "bullets":  [
+                                                                   "Booking + inbox support",
+                                                                   "Content planning",
+                                                                   "Community engagement support"
+                                                               ]
+                                               },
+                                               {
+                                                   "slug":  "creator-influencer-support",
+                                                   "title":  "Creator \u0026 Influencer Support",
+                                                   "description":  "Pipeline and posting support so you can stay on-camera, not in spreadsheets.",
+                                                   "heroImageUrl":  "",
+                                                   "bullets":  [
+                                                                   "Editing + thumbnails",
+                                                                   "Scheduling",
+                                                                   "Brand outreach support"
+                                                               ]
+                                               },
+                                               {
+                                                   "slug":  "small-business-support",
+                                                   "title":  "Small Business Support",
+                                                   "description":  "A general support lane that adapts to what your business needs weekly.",
+                                                   "heroImageUrl":  "",
+                                                   "bullets":  [
+                                                                   "Admin + ops support",
+                                                                   "Light design support",
+                                                                   "Social scheduling"
+                                                               ]
+                                               },
+                                               {
+                                                   "slug":  "e-commerce-support",
+                                                   "title":  "E-Commerce Support",
+                                                   "description":  "Store content and ops support with flexible adjustments per product/season.",
+                                                   "heroImageUrl":  "",
+                                                   "bullets":  [
+                                                                   "Product content support",
+                                                                   "Inbox + customer service",
+                                                                   "Campaign planning support"
+                                                               ]
+                                               }
+                                           ]
+                        },
+    "testimonials":  {
+                         "title":  "TESTIMONIALS",
+                         "items":  [
+                                       {
+                                           "name":  "Nadya",
+                                           "role":  "Founder, Skincare Brand",
+                                           "quote":  "Our content finally looks premium and consistent. The strategy is simple, the execution is fast, and sales followed.",
+                                           "imageUrl":  "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format\u0026fit=crop\u0026w=800\u0026q=80",
+                                           "workTitle":  "",
+                                           "description":  "",
+                                           "workImageUrl":  ""
+                                       },
+                                       {
+                                           "name":  "Rama",
+                                           "role":  "Creative Director",
+                                           "quote":  "Great taste, clear process, and super easy to collaborate with. The before-after difference is obvious.",
+                                           "imageUrl":  "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format\u0026fit=crop\u0026w=800\u0026q=80",
+                                           "workTitle":  "",
+                                           "description":  "",
+                                           "workImageUrl":  ""
+                                       }
+                                   ],
+                         "description":  ""
+                     },
+    "branding":  {
+                     "title":  "BRANDING BEFORE / AFTER",
+                     "description":  "A clean transformation: tighter grid, stronger hooks, clearer offer.",
+                     "beforeImageUrl":  "https://images.unsplash.com/photo-1520975594141-1b1b4c8f3f12?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                     "afterImageUrl":  "https://images.unsplash.com/photo-1520975797658-19d4b8d7fcb2?auto=format\u0026fit=crop\u0026w=1200\u0026q=80",
+                     "beforeLabel":  "From This",
+                     "afterLabel":  "To This"
+                 },
+    "workProcess":  {
+                        "title":  "MY WORK PROCESS",
+                        "steps":  [
+                                      {
+                                          "number":  "01",
+                                          "title":  "Audit",
+                                          "description":  "Goals, audience, and content gaps.",
+                                          "icon":  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format\u0026fit=crop\u0026w=600\u0026q=80"
+                                      },
+                                      {
+                                          "number":  "02",
+                                          "title":  "System",
+                                          "description":  "Pillars, hooks, format, cadence.",
+                                          "icon":  "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format\u0026fit=crop\u0026w=600\u0026q=80"
+                                      },
+                                      {
+                                          "number":  "03",
+                                          "title":  "Produce",
+                                          "description":  "Direction, templates, and execution.",
+                                          "icon":  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format\u0026fit=crop\u0026w=600\u0026q=80"
+                                      },
+                                      {
+                                          "number":  "04",
+                                          "title":  "Optimize",
+                                          "description":  "Review, iterate, and scale.",
+                                          "icon":  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format\u0026fit=crop\u0026w=600\u0026q=80"
+                                      }
+                                  ]
+                    },
+    "contact":  {
+                    "title":  "LET\u0027S BUILD YOUR NEXT 30 DAYS OF CONTENT",
+                    "description":  "Tell me what you sell and your goal. I\u0027ll reply with a simple plan.",
+                    "whatsappText":  "Chat on WhatsApp",
+                    "whatsappLink":  "https://wa.me/",
+                    "email":  "",
+                    "socialLinks":  [
+                                        {
+                                            "platform":  "Instagram",
+                                            "url":  ""
+                                        },
+                                        {
+                                            "platform":  "TikTok",
+                                            "url":  ""
+                                        }
+                                    ]
+                }
+}

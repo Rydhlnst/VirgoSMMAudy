@@ -1,26 +1,182 @@
+@config "../tailwind.config.ts";
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFFCF5;
+  --foreground: #050505;
+  --primary: #050505;
+  --primary-foreground: #FFFCF5;
+  --accent: #F4EB01;
+  --accent-foreground: #050505;
+  --muted: #E5E5E5;
+  --border: #111111;
+  --card: #ffffff;
+  --card-foreground: #050505;
+  --ring: #F4EB01;
+
+  /* Semantic extensions used across components */
+  --surface: var(--background);
+  --surface-foreground: var(--foreground);
+  --surface-inverse: #050505;
+  --surface-inverse-foreground: #FFFCF5;
+  --surface-inverse-80: rgba(5, 5, 5, 0.8);
+
+  --muted-foreground: rgba(5, 5, 5, 0.7);
+  --muted-foreground-weak: rgba(5, 5, 5, 0.6);
+  --muted-foreground-weaker: rgba(5, 5, 5, 0.5);
+
+  --inverse-muted-foreground: rgba(255, 252, 245, 0.75);
+  --inverse-muted-foreground-weak: rgba(255, 252, 245, 0.6);
+  --inverse-muted-foreground-weaker: rgba(255, 252, 245, 0.55);
+
+  --border-subtle: rgba(17, 17, 17, 0.15);
+  --border-subtle-2: rgba(17, 17, 17, 0.2);
+  --inverse-border-subtle: rgba(255, 252, 245, 0.15);
+  --inverse-border-subtle-2: rgba(255, 252, 245, 0.1);
+
+  --overlay-1: rgba(5, 5, 5, 0.05);
+  --overlay-2: rgba(5, 5, 5, 0.1);
+  --overlay-3: rgba(5, 5, 5, 0.2);
+  --overlay-4: rgba(5, 5, 5, 0.28);
+  --overlay-5: rgba(5, 5, 5, 0.38);
+
+  /* Overlays for inverse surfaces (e.g. dark sections on light theme) */
+  --overlay-inverse-1: rgba(255, 252, 245, 0.08);
+  --overlay-inverse-2: rgba(255, 252, 245, 0.12);
+  --overlay-inverse-3: rgba(255, 252, 245, 0.2);
+
+  --elevated: #0c0c0c;
+
+  /* Shadow presets (use in arbitrary shadow values) */
+  --shadow-1: 0 30px 90px rgba(0, 0, 0, 0.12);
+  --shadow-2: 0 25px 60px rgba(0, 0, 0, 0.18);
+  --shadow-3: 0 24px 70px rgba(0, 0, 0, 0.18);
+  --shadow-4: 0 24px 70px rgba(0, 0, 0, 0.25);
+  --shadow-5: 0 35px 90px rgba(0, 0, 0, 0.25);
+
+  /* Image overlays / masks */
+  --mask-strong: rgba(5, 5, 5, 0.7);
+  --mask-medium: rgba(5, 5, 5, 0.2);
+  --mask-weak: rgba(5, 5, 5, 0.1);
+
+  --app-font-sans: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans",
+    "Liberation Sans", sans-serif;
+  --app-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #050505;
+  --foreground: #FFFCF5;
+  --primary: #FFFCF5;
+  --primary-foreground: #050505;
+  --muted: rgba(255, 252, 245, 0.14);
+  --border: rgba(255, 252, 245, 0.22);
+  --card: #0c0c0c;
+  --card-foreground: #FFFCF5;
+
+  --surface: var(--background);
+  --surface-foreground: var(--foreground);
+  --surface-inverse: #FFFCF5;
+  --surface-inverse-foreground: #050505;
+  --surface-inverse-80: rgba(255, 252, 245, 0.8);
+
+  --muted-foreground: rgba(255, 252, 245, 0.75);
+  --muted-foreground-weak: rgba(255, 252, 245, 0.7);
+  --muted-foreground-weaker: rgba(255, 252, 245, 0.6);
+
+  --inverse-muted-foreground: rgba(5, 5, 5, 0.7);
+  --inverse-muted-foreground-weak: rgba(5, 5, 5, 0.6);
+  --inverse-muted-foreground-weaker: rgba(5, 5, 5, 0.5);
+
+  --border-subtle: rgba(255, 252, 245, 0.15);
+  --border-subtle-2: rgba(255, 252, 245, 0.2);
+  --inverse-border-subtle: rgba(5, 5, 5, 0.12);
+  --inverse-border-subtle-2: rgba(5, 5, 5, 0.1);
+
+  --overlay-1: rgba(255, 252, 245, 0.08);
+  --overlay-2: rgba(255, 252, 245, 0.12);
+  --overlay-3: rgba(255, 252, 245, 0.2);
+  --overlay-4: rgba(255, 252, 245, 0.28);
+  --overlay-5: rgba(255, 252, 245, 0.38);
+
+  --overlay-inverse-1: rgba(5, 5, 5, 0.06);
+  --overlay-inverse-2: rgba(5, 5, 5, 0.1);
+  --overlay-inverse-3: rgba(5, 5, 5, 0.18);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-ring: var(--ring);
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--app-font-sans);
+  background-image:
+    radial-gradient(1200px 700px at 70% -10%, rgba(245, 255, 0, 0.18), transparent 55%),
+    radial-gradient(900px 600px at -10% 20%, rgba(0, 0, 0, 0.06), transparent 60%),
+    url("/textures/paper.svg");
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: auto, auto, 420px 420px;
+  background-attachment: fixed, fixed, fixed;
+}
+
+/* Hide native scrollbars (still scrollable) */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* Hide Smooth Scrollbar tracks (keep scroll) */
+.scrollbar-track,
+.scrollbar-thumb {
+  display: none !important;
+}
+
+.hero-name {
+  font-family: var(--app-font-sans);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.78;
+  text-transform: uppercase;
+  /* Give a slightly condensed feel without relying on external fonts */
+  transform: scaleX(0.98);
+  transform-origin: center;
+}
+
+.app-description {
+  font-family: var(--app-font-sans);
+  line-height: 1.75;
+}
+
+.dashed-divider {
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(5, 5, 5, 0.55) 0,
+    rgba(5, 5, 5, 0.55) 26px,
+    transparent 26px,
+    transparent 44px
+  );
+  height: 2px;
 }

@@ -1,6 +1,7 @@
 import { LandingShell } from "@/components/landing/LandingShell";
 import { Skeleton } from "@/components/ui/skeleton";
 import { readLandingPageContent } from "@/lib/landing-content/storage";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -36,14 +37,14 @@ export default async function ContactPage() {
             <div className="rounded-[44px] border border-foreground/10 bg-foreground p-6 text-background">
               <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-background/70">{page.fastestLabel}</div>
               <div className="mt-3 text-sm text-background/85">{page.fastestText}</div>
-              <a
+              <Link
                 href={c.whatsappLink || "#"}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-5 inline-flex w-fit rounded-full bg-[color:var(--accent)] px-6 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-[color:var(--accent)]/90 active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
               >
                 {c.whatsappText}
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -51,25 +52,25 @@ export default async function ContactPage() {
         <ContactDivider />
 
         <div className="grid gap-6 md:grid-cols-12">
-          <div className="md:col-span-7">
+          <div className="md:col-span-12">
             <div className="rounded-[48px] border border-foreground/10 bg-card p-6 sm:p-8">
               <div className="text-xs font-black tracking-[0.22em] text-foreground/60">{page.contactOptionsLabel}</div>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[36px] border border-foreground/10 bg-background p-6">
                   <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">{page.emailLabel}</div>
                   <div className="mt-2 text-sm text-foreground/75">{c.email?.length ? c.email : "—"}</div>
-                  <a
+                  <Link
                     href={c.email?.length ? `mailto:${c.email}` : "#"}
                     className="mt-4 inline-flex w-fit rounded-full border border-foreground/15 bg-card px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-foreground hover:text-background active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
                   >
                     {page.emailCtaText}
-                  </a>
+                  </Link>
                 </div>
                 <div className="rounded-[36px] border border-foreground/10 bg-background p-6">
                   <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">{page.socialLabel}</div>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {c.socialLinks.map((s, idx) => (
-                      <a
+                      <Link
                         key={`${s.platform}-${idx}`}
                         href={s.url || "#"}
                         target="_blank"
@@ -77,7 +78,7 @@ export default async function ContactPage() {
                         className="transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
                       >
                         <Chip text={s.platform} />
-                      </a>
+                      </Link>
                     ))}
                     {!c.socialLinks.length ? <div className="text-sm text-foreground/60">{page.noSocialText}</div> : null}
                   </div>
@@ -98,7 +99,7 @@ export default async function ContactPage() {
             </div>
           </div>
 
-          <div className="md:col-span-5">
+          {/* <div className="md:col-span-5">
             <div className="rounded-[48px] border border-foreground/10 bg-background p-6 sm:p-8">
               <div className="text-xs font-black tracking-[0.22em] text-foreground/60">{page.previewLabel}</div>
               <div className="mt-4 text-sm text-foreground/70">{page.previewText}</div>
@@ -108,7 +109,7 @@ export default async function ContactPage() {
                 <Skeleton className="h-48 w-full rounded-[34px]" />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </LandingShell>

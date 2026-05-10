@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { SmoothScrollbarRoot } from "@/components/smooth-scrollbar-root";
+import { DEFAULT_LANDING_PAGE_CONTENT } from "@/lib/landing-content/default-content";
+import { Navbar } from "@/components/landing/Navbar";
 
 export const metadata: Metadata = {
   title: "Virgo Social",
@@ -14,9 +16,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased" style={{ ["--font-sans" as string]: "system-ui" }}>
+    <html
+      lang="en"
+      className="h-full antialiased"
+      style={{ ["--font-sans" as string]: "system-ui" }}
+    >
       <body className="min-h-full overflow-hidden">
-        <SmoothScrollbarRoot>{children}</SmoothScrollbarRoot>
+        <Navbar navbar={DEFAULT_LANDING_PAGE_CONTENT.navbar} />
+
+        <SmoothScrollbarRoot>
+          <main className="">
+            {children}
+          </main>
+        </SmoothScrollbarRoot>
       </body>
     </html>
   );

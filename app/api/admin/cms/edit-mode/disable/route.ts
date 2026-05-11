@@ -1,28 +1,27 @@
-import { cookies } from "next/headers";
-import { toErrorResponse } from "@/lib/api/errors";
-import { successResponse } from "@/lib/api/response";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const admin = await requireAdmin(request);
-  if (!admin.success) {
-    return admin.response;
-  }
-
   try {
-    const cookieStore = await cookies();
-    cookieStore.set("cms_edit", "0", {
+    const { requireAdmin } = await import("@/lib/auth/require-admin");
+
+    const admin = await requireAdmin(request);
+    if (!admin.success) {
+      return admin.response;
+    }
+
+    const response = NextResponse.json({ ok: true, enabled: false, message: "Edit mode disabled." });
+    response.cookies.set("cms_edit", "0", {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
       expires: new Date(0),
     });
 
-    return successResponse({ enabled: false }, { message: "Edit mode disabled." });
+    return response;
   } catch (error) {
-    return toErrorResponse(error);
+    const message = error instanceof Error ? error.message : "Failed to disable edit mode.";
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }

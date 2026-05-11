@@ -1,11 +1,22 @@
+"use client";
+
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import { Heart, MessageCircle } from "lucide-react";
 import { TypingBubbleClient } from "./TypingBubbleClient";
-import { EditableImage } from "@/components/cms/EditableImage";
 import { EditableText } from "@/components/cms/EditableText";
 import { EditableTextarea } from "@/components/cms/EditableTextarea";
+import { TestimonialsWorkImageFrameClient } from "@/components/landing/TestimonialsWorkImageFrameClient";
+import { useEditModeContext } from "@/components/cms/EditModeProvider";
+import { CmsAddItemCard } from "@/components/cms/CmsAddItemCard";
+import { Button } from "@/components/ui/button";
 
 export function TestimonialsSection({ testimonials }: { testimonials: LandingPageContent["testimonials"] }) {
+  const context = useEditModeContext();
+  const itemsFromContext = context?.getFieldValue("testimonials.items");
+  const items = Array.isArray(itemsFromContext)
+    ? (itemsFromContext as LandingPageContent["testimonials"]["items"])
+    : testimonials.items;
+
   return (
     <section className="py-14 md:py-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -26,17 +37,16 @@ export function TestimonialsSection({ testimonials }: { testimonials: LandingPag
         </div>
 
         <div className="mt-10 grid gap-6 md:grid-cols-2">
-          {testimonials.items.map((t, idx) => (
+          {items.map((t, idx) => (
             <figure
               key={idx}
               className="group relative overflow-hidden rounded-[48px] bg-[color:var(--surface-inverse)] shadow-[var(--shadow-3)]"
             >
               <div className="relative h-[440px] w-full sm:h-[520px]">
-                <EditableImage
-                  path={`testimonials.items.${idx}.workImageUrl`}
+                <TestimonialsWorkImageFrameClient
+                  idx={idx}
                   src={t.workImageUrl}
                   alt={t.workTitle || t.name}
-                  className="absolute inset-0"
                   imgClassName="absolute inset-0 h-full w-full rounded-none object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--mask-strong)] via-[color:var(--mask-medium)] to-[color:var(--mask-weak)]" />
@@ -101,11 +111,59 @@ export function TestimonialsSection({ testimonials }: { testimonials: LandingPag
                       className="mt-4 text-sm leading-6 text-[color:var(--inverse-muted-foreground)]"
                       rows={3}
                     />
+
+                    {context?.isEditMode ? (
+                      <div className="mt-4">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full border-[color:var(--inverse-border-subtle)] bg-[color:var(--overlay-inverse-1)] text-[color:var(--surface-inverse-foreground)] hover:bg-[color:var(--overlay-inverse-2)]"
+                          onClick={() => {
+                            context.updateField(
+                              "testimonials.items",
+                              items.filter((_, i) => i !== idx),
+                            );
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
                 </figcaption>
               </div>
             </figure>
           ))}
+
+          {context?.isEditMode ? (
+            <figure className="group relative overflow-hidden rounded-[48px] bg-[color:var(--surface-inverse)] shadow-[var(--shadow-3)]">
+              <div className="relative h-[440px] w-full sm:h-[520px]">
+                <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--mask-strong)] via-[color:var(--mask-medium)] to-[color:var(--mask-weak)]" />
+                <div className="absolute inset-0 p-6">
+                  <CmsAddItemCard
+                    label="Add testimonial"
+                    onClick={() => {
+                      context.updateField("testimonials.items", [
+                        ...items,
+                        {
+                          name: "New client",
+                          role: "",
+                          quote: "New quote",
+                          workTitle: "",
+                          description: "",
+                          workImageUrl: "",
+                          imageUrl: "",
+                        },
+                      ]);
+                    }}
+                    className="h-full rounded-[34px] border-[color:var(--inverse-border-subtle)]/80 bg-[color:var(--surface-inverse-80)]"
+                    iconClassName="bg-[color:var(--accent)] text-[color:var(--accent-foreground)]"
+                    contentClassName="gap-4"
+                  />
+                </div>
+              </div>
+            </figure>
+          ) : null}
         </div>
       </div>
     </section>

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import { Heart } from "lucide-react";
@@ -5,9 +7,15 @@ import Link from "next/link";
 import { EditableImage } from "@/components/cms/EditableImage";
 import { EditableText } from "@/components/cms/EditableText";
 import { EditableTextarea } from "@/components/cms/EditableTextarea";
+import { useEditModeContext } from "@/components/cms/EditModeProvider";
+import { Plus } from "lucide-react";
 
 export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
-  const tags = hero.tags.filter(Boolean);
+  const context = useEditModeContext();
+  const tagsFromContext = context?.getFieldValue("hero.tags");
+  const tagsValue = Array.isArray(tagsFromContext) ? (tagsFromContext as string[]) : hero.tags;
+
+  const tags = tagsValue.filter(Boolean);
   const primaryTags = tags.slice(0, 3);
   const extraTags = tags.slice(3);
 
@@ -31,7 +39,7 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
                 className="inline-flex rounded-full bg-accent px-5 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-[color:var(--accent-foreground)]"
               />
               {extraTags.length ? (
-                <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)]">
+                <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-(--muted-foreground-weak)">
                   {extraTags.map((tag, idx) => (
                     <EditableText key={tag} as="span" path={`hero.tags.${idx + 3}`} value={tag} className="mr-2" />
                   ))}
@@ -58,6 +66,20 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
                       className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weaker)]"
                     />
                   ))}
+
+                  {context?.isEditMode ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        context.updateField("hero.tags", [...tagsValue, "New tag"]);
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full border border-dashed border-accent/60 bg-transparent px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)] transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                      aria-label="Add hero tag"
+                    >
+                      <Plus className="h-3.5 w-3.5 text-accent" aria-hidden />
+                      Add
+                    </button>
+                  ) : null}
                 </div>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
                   <Button asChild variant="accent" size="lg" className="h-12 px-8">

@@ -32,7 +32,7 @@ export function EditableText({
   return (
     <Comp
       className={cn(
-        "rounded-md outline-none ring-1 ring-dashed ring-[color:var(--accent)]/55 transition focus-visible:ring-2 focus-visible:ring-[color:var(--accent)]",
+        "min-w-0 whitespace-pre-wrap break-words rounded-md outline-none ring-1 ring-dashed ring-[color:var(--accent)]/55 transition focus-visible:ring-2 focus-visible:ring-[color:var(--accent)]",
         className,
       )}
       contentEditable

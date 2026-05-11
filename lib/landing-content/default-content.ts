@@ -52,20 +52,6 @@ const RAW_DEFAULT_LANDING_PAGE_CONTENT = {
     label: "What we do",
     description:
       "We help businesses save time and stay consistent by handling administrative tasks, inbox and calendar management, social media support, Canva designs, customer service, content planning, and workflow organization.",
-    images: [
-      {
-        imageUrl: "",
-        alt: "Administrative support",
-      },
-      {
-        imageUrl: "",
-        alt: "Content planning",
-      },
-      {
-        imageUrl: "",
-        alt: "Creative support",
-      },
-    ],
   },
 
   portfolio: {
@@ -485,9 +471,6 @@ pages: {
     badge: "ABOUT",
     profileLabel: "PROFILE",
     storyLabel: "STORY",
-    notesLabel: "NOTES",
-    notesText:
-      "Virgo Social Services provides virtual assistance, administrative support, creative help, and social media support for businesses that need smoother daily operations.",
     processLabel: "PROCESS",
     processTitle: "How we support your business",
     meetTeamLabel: "MEET THE TEAM",
@@ -568,9 +551,6 @@ pages: {
     cardPointsText: "{count} points",
     cardDetailText: "Details",
     detailBackText: "Back to services",
-    detailMediaLabel: "MEDIA",
-    detailMediaText:
-      "Placeholder media for now. Replace this with real brand assets, client work, or service visuals later.",
     detailIncludesLabel: "INCLUDES",
     detailCtaText: "Check availability",
     groupCoreLabel: "Core services",

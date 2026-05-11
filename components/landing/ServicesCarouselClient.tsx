@@ -9,6 +9,7 @@ import { EditableImage } from "@/components/cms/EditableImage";
 import { EditableText } from "@/components/cms/EditableText";
 import { EditableTextarea } from "@/components/cms/EditableTextarea";
 import { useEditModeContext } from "@/components/cms/EditModeProvider";
+import { CmsAddItemCard } from "@/components/cms/CmsAddItemCard";
 
 export function ServicesCarouselClient({
   items,
@@ -24,6 +25,27 @@ export function ServicesCarouselClient({
 
   const itemsFromContext = context?.getFieldValue("services.items");
   const renderItems = Array.isArray(itemsFromContext) ? (itemsFromContext as typeof items) : items;
+
+  function addServiceItem() {
+    if (!context?.isEditMode) return;
+    const current = Array.isArray(itemsFromContext) ? (itemsFromContext as typeof items) : items;
+    context.updateField("services.items", [
+      ...current,
+      {
+        title: "",
+        name: "New Service",
+        description: "",
+        price: "",
+        hoursPerWeek: "",
+        includes: [],
+        idealFor: "",
+        imageUrl: "",
+        buttonText: "Get Started",
+        buttonLink: "/contact",
+        isHighlighted: false,
+      },
+    ]);
+  }
 
   function prefersReducedMotion() {
     return (
@@ -77,34 +99,6 @@ export function ServicesCarouselClient({
           <EditableText path="services.carouselHintText" value={carouselHintText} />
         </div>
         <div className="flex items-center gap-2">
-          {context?.isEditMode ? (
-            <Button
-              type="button"
-              variant="outline"
-              className="h-10 rounded-full border-[color:var(--inverse-border-subtle)] bg-[color:var(--overlay-inverse-1)] text-[color:var(--surface-inverse-foreground)] hover:bg-[color:var(--overlay-inverse-2)]"
-              onClick={() => {
-                const current = Array.isArray(itemsFromContext) ? (itemsFromContext as typeof items) : items;
-                context.updateField("services.items", [
-                  ...current,
-                  {
-                    title: "",
-                    name: "New Service",
-                    description: "",
-                    price: "",
-                    hoursPerWeek: "",
-                    includes: [],
-                    idealFor: "",
-                    imageUrl: "",
-                    buttonText: "Get Started",
-                    buttonLink: "/contact",
-                    isHighlighted: false,
-                  },
-                ]);
-              }}
-            >
-              Add item
-            </Button>
-          ) : null}
           <div className="hidden items-center gap-2 md:flex">
           <Button
             type="button"
@@ -192,6 +186,26 @@ export function ServicesCarouselClient({
                         ))}
                       </ul>
                     ) : null}
+
+                    {context?.isEditMode ? (
+                      <div className="mt-4 flex justify-start">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const currentIncludes =
+                              (context.getFieldValue(`services.items.${idx}.includes`) as unknown[] | undefined) ??
+                              svc.includes ??
+                              [];
+                            const safeIncludes = Array.isArray(currentIncludes) ? currentIncludes : [];
+                            context.updateField(`services.items.${idx}.includes`, [...safeIncludes, "New bullet"]);
+                          }}
+                        >
+                          Add bullet
+                        </Button>
+                      </div>
+                    ) : null}
                     {svc.idealFor ? (
                       <div className="mt-4 text-left text-sm">
                         <span className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)]">
@@ -244,7 +258,21 @@ export function ServicesCarouselClient({
               </div>
             </div>
           );
-        })}
+        })} 
+
+        {context?.isEditMode ? (
+          <div className="w-full shrink-0 snap-start basis-[85%] sm:basis-[46%] md:basis-[44%] lg:basis-[32%]">
+            <div className="rounded-[44px] bg-[color:var(--card)] p-3 text-[color:var(--card-foreground)] shadow-[var(--shadow-4)]">
+              <div className="mt-3 flex min-h-[440px] flex-col rounded-[34px] bg-[color:var(--card)] p-6">
+                <CmsAddItemCard
+                  label="Add service"
+                  onClick={addServiceItem}
+                  className="h-full min-h-[440px] rounded-[28px] border-[color:var(--border)]/20 bg-[color:var(--overlay-1)]"
+                />
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

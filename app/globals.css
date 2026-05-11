@@ -158,7 +158,8 @@ body::-webkit-scrollbar {
   font-family: var(--app-font-sans);
   font-weight: 900;
   letter-spacing: -0.06em;
-  line-height: 0.78;
+  /* More breathing room for multi-line headings across pages/sections. */
+  line-height: 0.9;
   text-transform: uppercase;
   /* Give a slightly condensed feel without relying on external fonts */
   transform: scaleX(0.98);

@@ -6,6 +6,7 @@ import { EditableImage } from "@/components/cms/EditableImage";
 import { EditableText } from "@/components/cms/EditableText";
 import { Button } from "@/components/ui/button";
 import { useEditModeContext } from "@/components/cms/EditModeProvider";
+import { CmsAddItemCard } from "@/components/cms/CmsAddItemCard";
 
 type PortfolioEntry = {
   item: LandingPageContent["portfolio"]["items"][number];
@@ -28,7 +29,17 @@ function IconBar({ type }: { type: "video" | "photo" }) {
   );
 }
 
-function PortfolioGrid({ entries, onRemove }: { entries: PortfolioEntry[]; onRemove?: (index: number) => void }) {
+function PortfolioGrid({
+  entries,
+  onRemove,
+  onAdd,
+  addLabel,
+}: {
+  entries: PortfolioEntry[];
+  onRemove?: (index: number) => void;
+  onAdd?: () => void;
+  addLabel?: string;
+}) {
   const context = useEditModeContext();
   return (
     <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -78,6 +89,18 @@ function PortfolioGrid({ entries, onRemove }: { entries: PortfolioEntry[]; onRem
           </div>
         );
       })}
+
+      {context?.isEditMode && onAdd ? (
+        <div className="group flex min-h-[340px] flex-col rounded-[34px] border-none border-foreground bg-card p-3 shadow-sm">
+          <div className="flex flex-1 flex-col">
+            <CmsAddItemCard
+              label={addLabel || "Add item"}
+              onClick={onAdd}
+              className="h-full min-h-[340px] rounded-[28px]"
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -146,8 +169,13 @@ export function PortfolioSection({ portfolio }: { portfolio: LandingPageContent[
                 </Button>
               </div>
             ) : null}
-            {videofolio.length ? (
-              <PortfolioGrid entries={videofolio} onRemove={removeItem} />
+            {videofolio.length || context?.isEditMode ? (
+              <PortfolioGrid
+                entries={videofolio}
+                onRemove={removeItem}
+                onAdd={() => addItem("video")}
+                addLabel="Add video"
+              />
             ) : (
               <EditableText
                 as="div"
@@ -176,8 +204,13 @@ export function PortfolioSection({ portfolio }: { portfolio: LandingPageContent[
                 </Button>
               </div>
             ) : null}
-            {photofolio.length ? (
-              <PortfolioGrid entries={photofolio} onRemove={removeItem} />
+            {photofolio.length || context?.isEditMode ? (
+              <PortfolioGrid
+                entries={photofolio}
+                onRemove={removeItem}
+                onAdd={() => addItem("photo")}
+                addLabel="Add photo"
+              />
             ) : (
               <EditableText
                 as="div"

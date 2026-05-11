@@ -76,7 +76,7 @@ export default async function PortfolioPage() {
                 </div>
                 <Link
                   href="/contact"
-                  className="hidden rounded-full border border-foreground/10 bg-card px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground shadow-sm transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-foreground hover:text-background active:translate-y-0 active:rotate-0 active:scale-[0.99] sm:inline-flex motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
+                  className="hidden rounded-full border border-foreground/10 bg-card px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground shadow-sm transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-foreground hover:text-background active:translate-y-0 active:rotate-0 active:scale-[0.99] sm:inline-flex motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
                 >
                   <EditableText path="pages.portfolio.workTogetherCtaText" value={page.workTogetherCtaText} />
                 </Link>
@@ -96,19 +96,29 @@ export default async function PortfolioPage() {
                       imgClassName="aspect-[4/3] w-full rounded-[26px] object-cover"
                     />
                     <div className="mt-4 flex items-center justify-between gap-4">
-                      <div className="min-w-0">
-                        <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">{item.type}</div>
-                        <EditableText path={`portfolio.items.${idx}.title`} value={item.title} className="mt-2 text-sm font-black text-foreground" />
-                        {item.caption ? (
-                          <EditableText path={`portfolio.items.${idx}.caption`} value={item.caption} className="mt-2 text-sm text-foreground/65" />
-                        ) : null}
-                      </div>
+                        <div className="min-w-0">
+                          <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">{item.type}</div>
+                          <EditableText
+                            as="div"
+                            path={`portfolio.items.${idx}.title`}
+                            value={item.title}
+                            className="mt-2 text-sm font-black text-foreground"
+                          />
+                          {item.caption ? (
+                            <EditableText
+                              as="div"
+                              path={`portfolio.items.${idx}.caption`}
+                              value={item.caption}
+                              className="mt-2 text-sm text-foreground/65"
+                            />
+                          ) : null}
+                        </div>
                       {item.link?.length ? (
                         <Link
                           href={item.link}
                           target="_blank"
                           rel="noreferrer"
-                          className="shrink-0 rounded-full bg-[color:var(--accent)] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-[color:var(--accent)]/90 active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
+                          className="shrink-0 rounded-full bg-accent px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-[color:var(--accent)]/90 active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
                         >
                           <EditableText path="pages.portfolio.openLinkText" value={page.openLinkText} />
                         </Link>

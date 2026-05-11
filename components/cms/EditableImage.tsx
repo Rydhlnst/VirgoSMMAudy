@@ -25,8 +25,12 @@ type ImageMeta = {
 
 function encodePathKey(path: string): string {
   // Base64url without dots so we can use it as a record key in cmsMeta.images.<key>
-  const b64 = window.btoa(unescape(encodeURIComponent(path)));
-  return b64.replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+  // Must work during SSR (no `window`).
+  const base64 =
+    typeof window === "undefined"
+      ? Buffer.from(path, "utf8").toString("base64")
+      : window.btoa(unescape(encodeURIComponent(path)));
+  return base64.replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
 }
 
 function clamp(n: number, min: number, max: number) {

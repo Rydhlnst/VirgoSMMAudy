@@ -36,7 +36,7 @@ function ServiceCard({
     <div className="group rounded-[44px] border border-foreground/10 bg-card p-5 transition motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0">
       <EditableImage path={imagePath} src={imageUrl} alt={title} imgClassName="aspect-[4/3] w-full rounded-[34px] object-cover" />
       <div className="mt-5">
-        <EditableText path={titlePath} value={title} className="hero-name text-2xl" />
+        <EditableText as="h3" path={titlePath} value={title} className="hero-name text-2xl" />
         {description ? (
           <EditableMarkdown path={descriptionPath || ""} value={description} className="mt-2 text-sm text-foreground/70" />
         ) : null}

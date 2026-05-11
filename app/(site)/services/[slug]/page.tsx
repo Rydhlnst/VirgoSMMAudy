@@ -68,14 +68,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   imgClassName="aspect-[4/3] w-full rounded-[34px] object-cover"
                 />
               </div>
-              <div className="mt-4 rounded-[28px] border border-foreground/10 bg-background p-4">
-                <EditableText
-                  path="pages.services.detailMediaLabel"
-                  value={page.detailMediaLabel}
-                  className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60"
-                />
-                <EditableText path="pages.services.detailMediaText" value={page.detailMediaText} className="mt-2 text-sm text-foreground/70" />
-              </div>
             </div>
           </div>
           <div className="md:col-span-6">

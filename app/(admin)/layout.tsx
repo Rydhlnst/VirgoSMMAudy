@@ -6,7 +6,9 @@ type Props = {
 
 const AdminLayout = ({children}: Props) => {
   return (
-    <div>{children}</div>
+    <div className="h-dvh w-full overflow-y-auto overflow-x-hidden">
+      {children}
+    </div>
   )
 }
 

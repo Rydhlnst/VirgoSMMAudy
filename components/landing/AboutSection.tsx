@@ -1,5 +1,4 @@
 import type { LandingPageContent } from "@/lib/landing-content/types";
-import { EditableImage } from "@/components/cms/EditableImage";
 import { EditableText } from "@/components/cms/EditableText";
 import { EditableTextarea } from "@/components/cms/EditableTextarea";
 
@@ -42,33 +41,6 @@ export function AboutSection({ about }: { about: LandingPageContent["about"] }) 
               </div>
               <div className="mt-6 h-0.5 w-16 bg-foreground/25" />
             </div>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-3">
-            {about.images.slice(0, 3).map((img, idx) => {
-              const rotate = idx === 0 ? "-rotate-6" : idx === 1 ? "rotate-2" : "rotate-8";
-              return (
-                <div
-                  key={idx}
-                  className={`overflow-hidden rounded-[28px] border-none border-foreground bg-background p-2 shadow-sm ${rotate}`}
-                >
-                  <div className="relative overflow-hidden rounded-[20px]">
-                    <EditableImage
-                      path={`about.images.${idx}.imageUrl`}
-                      src={img.imageUrl}
-                      alt={img.alt}
-                      imgClassName="aspect-4/3 w-full object-cover"
-                    />
-                  </div>
-                  <EditableText
-                    as="div"
-                    path={`about.images.${idx}.alt`}
-                    value={img.alt}
-                    className="mt-2 text-xs text-foreground/70"
-                  />
-                </div>
-              );
-            })}
           </div>
         </div>
       </div>

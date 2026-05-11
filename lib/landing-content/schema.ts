@@ -55,14 +55,6 @@ export const aboutSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("ABOUT ME"),
   label: z.string().min(1, "Label wajib diisi").default("Who I am?"),
   description: z.string().min(1, "Description wajib diisi"),
-  images: z
-    .array(
-      z.object({
-        imageUrl: urlOrEmpty,
-        alt: z.string().min(1, "Alt wajib diisi").default("About image"),
-      }),
-    )
-    .default([]),
 });
 
 export const portfolioSchema = z.object({
@@ -241,11 +233,6 @@ export const pagesSchema = z
         badge: z.string().min(1).default("ABOUT"),
         profileLabel: z.string().min(1).default("PROFILE"),
         storyLabel: z.string().min(1).default("STORY"),
-        notesLabel: z.string().min(1).default("NOTES"),
-        notesText: z
-          .string()
-          .min(1)
-          .default("Images on this page are placeholders (skeletons) for fast loading. Replace them with real assets later."),
         processLabel: z.string().min(1).default("PROCESS"),
         processTitle: z.string().min(1).default("How we support your business"),
         meetTeamLabel: z.string().min(1).default("MEET THE TEAM"),
@@ -278,8 +265,6 @@ export const pagesSchema = z
         badge: "ABOUT",
         profileLabel: "PROFILE",
         storyLabel: "STORY",
-        notesLabel: "NOTES",
-        notesText: "Images on this page are placeholders (skeletons) for fast loading. Replace them with real assets later.",
         processLabel: "PROCESS",
         processTitle: "How we support your business",
         meetTeamLabel: "MEET THE TEAM",
@@ -358,8 +343,6 @@ export const pagesSchema = z
         cardPointsText: z.string().min(1).default("{count} points"),
         cardDetailText: z.string().min(1).default("Details"),
         detailBackText: z.string().min(1).default("Back to services"),
-        detailMediaLabel: z.string().min(1).default("MEDIA"),
-        detailMediaText: z.string().min(1).default("Placeholder (skeleton) for now. Replace with real assets later."),
         detailIncludesLabel: z.string().min(1).default("INCLUDES"),
         detailCtaText: z.string().min(1).default("Check availability"),
         groupCoreLabel: z.string().min(1).default("Core services"),

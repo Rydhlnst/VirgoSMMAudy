@@ -12,12 +12,19 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import type { LandingPageContent } from "@/lib/landing-content/types";
+import { useEditModeContext } from "@/components/cms/EditModeProvider";
+import { EditableText } from "@/components/cms/EditableText";
+import { Plus } from "lucide-react";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
 export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const context = useEditModeContext();
+
+  const menuFromContext = context?.getFieldValue("navbar.menu");
+  const menu = Array.isArray(menuFromContext) ? (menuFromContext as LandingPageContent["navbar"]["menu"]) : navbar.menu;
 
   React.useEffect(() => {
     if (!isOpen) return;
@@ -46,13 +53,13 @@ export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
         <div className="mx-auto max-w-7xl px-6 py-6 md:py-8">
           <div className="hidden items-center justify-between md:grid md:grid-cols-3">
             <nav className="flex items-center gap-7 text-[11px] font-medium tracking-[0.22em] text-(--inverse-muted-foreground)">
-              {navbar.menu.slice(0, 2).map((item, idx) => (
+              {menu.slice(0, 2).map((item, idx) => (
                 <Link
                   key={idx}
                   href={item.href}
                   className="uppercase text-(--inverse-muted-foreground) transition-colors motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:text-(--surface-inverse-foreground) motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0"
                 >
-                  {item.label}
+                  <EditableText path={`navbar.menu.${idx}.label`} value={item.label} />
                 </Link>
               ))}
             </nav>
@@ -62,20 +69,34 @@ export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
                 href="/"
                 className="hero-name text-center text-2xl transition-transform motion-reduce:transition-none hover:-rotate-1 motion-reduce:hover:rotate-0 md:text-3xl lg:text-4xl"
               >
-                {navbar.brandName}
+                <EditableText path="navbar.brandName" value={navbar.brandName} />
               </Link>
             </div>
 
             <nav className="flex items-center justify-end gap-7 text-[11px] font-medium tracking-[0.22em] text-(--inverse-muted-foreground)">
-              {navbar.menu.slice(2, 4).map((item, idx) => (
+              {menu.slice(2, 4).map((item, idx) => (
                 <Link
                   key={idx}
                   href={item.href}
                   className="uppercase text-(--inverse-muted-foreground) transition-colors motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:text-(--surface-inverse-foreground) motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0"
                 >
-                  {item.label}
+                  <EditableText path={`navbar.menu.${idx + 2}.label`} value={item.label} />
                 </Link>
               ))}
+
+              {context?.isEditMode && menu.length < 4 ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    context.updateField("navbar.menu", [...menu, { label: "New", href: "/#" }]);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full border border-dashed border-accent/60 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-(--inverse-muted-foreground) hover:text-(--surface-inverse-foreground) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  aria-label="Add navbar menu item"
+                >
+                  <Plus className="size-4 text-accent" />
+                  Add
+                </button>
+              ) : null}
             </nav>
           </div>
 
@@ -85,7 +106,7 @@ export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
               onClick={closeMenu}
               className="hero-name max-w-[70%] truncate text-base transition-transform motion-reduce:transition-none hover:-rotate-1 motion-reduce:hover:rotate-0"
             >
-              {navbar.brandName}
+              <EditableText path="navbar.brandName" value={navbar.brandName} />
             </Link>
 
             <button
@@ -151,10 +172,10 @@ export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
             transition={overlayTransition}
             className="fixed inset-0 z-40 bg-(--surface-inverse) text-(--surface-inverse-foreground) md:hidden"
           >
-            <motion.div
-              initial={shouldReduceMotion ? false : { y: -16, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={
+                <motion.div
+                  initial={shouldReduceMotion ? false : { y: -16, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={
                 shouldReduceMotion
                   ? { opacity: 0 }
                   : { y: -16, opacity: 0 }
@@ -163,7 +184,7 @@ export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
               className="flex min-h-dvh flex-col px-6 pb-8 pt-28"
             >
               <nav className="flex flex-1 flex-col justify-center gap-5">
-                {navbar.menu.map((item, idx) => (
+                {menu.map((item, idx) => (
                   <motion.div
                     key={item.href}
                     initial={
@@ -187,10 +208,24 @@ export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
                       onClick={closeMenu}
                       className="block border-b border-(--inverse-border-subtle) pb-4 text-4xl font-black uppercase tracking-[-0.04em] text-(--surface-inverse-foreground) transition-transform active:scale-[0.98]"
                     >
-                      {item.label}
+                      <EditableText path={`navbar.menu.${idx}.label`} value={item.label} />
                     </Link>
                   </motion.div>
                 ))}
+
+                {context?.isEditMode ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      context.updateField("navbar.menu", [...menu, { label: "New", href: "/#" }]);
+                    }}
+                    className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-dashed border-accent/60 px-6 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-(--inverse-muted-foreground) hover:text-(--surface-inverse-foreground) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    aria-label="Add navbar menu item"
+                  >
+                    <Plus className="size-4 text-accent" />
+                    Add menu item
+                  </button>
+                ) : null}
               </nav>
 
               <motion.div
@@ -207,12 +242,12 @@ export function Navbar({ navbar }: { navbar: LandingPageContent["navbar"] }) {
               >
                 <Button asChild variant="accent" className="h-12 w-full px-6">
                   <Link href={navbar.ctaLink} onClick={closeMenu}>
-                    {navbar.ctaText}
+                    <EditableText path="navbar.ctaText" value={navbar.ctaText} />
                   </Link>
                 </Button>
 
                 <p className="text-xs font-medium uppercase tracking-[0.22em] text-(--inverse-muted-foreground)">
-                  {navbar.brandName}
+                  <EditableText path="navbar.brandName" value={navbar.brandName} />
                 </p>
               </motion.div>
             </motion.div>

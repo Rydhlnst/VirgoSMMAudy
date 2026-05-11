@@ -27,7 +27,7 @@ export default async function AdminPage() {
         <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 py-4 sm:px-6">
           <div>
             <div className="text-sm font-black uppercase tracking-[0.2em] text-[color:var(--muted-foreground-weak)]">CMS Admin</div>
-            <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">ShadCN-based content editor</div>
+            <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Content editor</div>
           </div>
           <div className="flex items-center gap-2">
             <Button asChild variant="accent" className="rounded-full">

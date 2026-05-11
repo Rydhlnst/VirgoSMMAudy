@@ -100,31 +100,10 @@ export default async function AboutPage() {
                 className="text-xs font-black tracking-[0.22em] text-foreground/60"
               />
               <EditableMarkdown path="about.description" value={about.description} className="mt-4 text-base text-foreground/80 sm:text-lg" />
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                {about.images.slice(0, 3).map((img, idx) => (
-                  <div key={`${img.alt}-${idx}`} className="rounded-[28px] border border-foreground/10 bg-background p-3">
-                    <EditableImage
-                      path={`about.images.${idx}.imageUrl`}
-                      src={img.imageUrl}
-                      alt={img.alt}
-                      className="w-full"
-                      imgClassName="aspect-[4/3] w-full rounded-[22px] object-cover"
-                    />
-                    <EditableText path={`about.images.${idx}.alt`} value={img.alt} className="mt-3 text-xs font-semibold text-foreground/60" />
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 rounded-[36px] border border-foreground/10 bg-background p-6">
-                <EditableText
-                  as="div"
-                  path="pages.about.notesLabel"
-                  value={page.notesLabel}
-                  className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60"
-                />
-                <EditableText as="p" path="pages.about.notesText" value={page.notesText} className="mt-3 text-sm text-foreground/75" />
-              </div>
             </div>
+          </div>
 
+          <div className="md:col-span-12">
             <div className="mt-10 w-full rounded-[48px] border border-foreground/10 bg-background p-6 sm:p-8">
               <div className="flex items-end justify-between gap-6">
                 <div>
@@ -156,34 +135,46 @@ export default async function AboutPage() {
                 />
               ) : null}
               <div className="mt-8 grid w-full gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {page.meetTeamMembers.map((member, idx) => (
-                  <div key={`${member.name}-${idx}`} className="w-full overflow-hidden rounded-[32px] border border-foreground/10 bg-card p-4">
-                    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[24px]">
-                      <EditableImage
-                        path={`pages.about.meetTeamMembers.${idx}.imageUrl`}
-                        src={member.imageUrl}
-                        alt={member.name}
-                        className="h-full w-full"
-                        imgClassName="h-full w-full rounded-[24px] object-cover"
-                      />
-                    </div>
-                    <div className="mt-4">
-                      <EditableText path={`pages.about.meetTeamMembers.${idx}.name`} value={member.name} className="hero-name text-2xl" />
-                      <EditableText
-                        path={`pages.about.meetTeamMembers.${idx}.role`}
-                        value={member.role}
-                        className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-foreground/55"
-                      />
-                      {member.bio ? (
-                        <EditableMarkdown
-                          path={`pages.about.meetTeamMembers.${idx}.bio`}
-                          value={member.bio}
-                          className="mt-3 text-sm text-foreground/72"
+                {page.meetTeamMembers.map((member, idx) => {
+                  const tiltClass = idx % 2 === 0 ? "-rotate-2" : "rotate-2";
+                  return (
+                    <div
+                      key={`${member.name}-${idx}`}
+                      className="w-full overflow-hidden rounded-[32px] border border-foreground/10 bg-card p-4"
+                    >
+                      <div
+                        className={`relative aspect-[4/5] w-full overflow-hidden rounded-[24px] transition-transform motion-reduce:transition-none ${tiltClass}`}
+                      >
+                        <EditableImage
+                          path={`pages.about.meetTeamMembers.${idx}.imageUrl`}
+                          src={member.imageUrl}
+                          alt={member.name}
+                          className="h-full w-full"
+                          imgClassName="h-full w-full rounded-[24px] object-cover"
                         />
-                      ) : null}
+                      </div>
+                      <div className="mt-4">
+                        <EditableText
+                          path={`pages.about.meetTeamMembers.${idx}.name`}
+                          value={member.name}
+                          className="hero-name text-2xl"
+                        />
+                        <EditableText
+                          path={`pages.about.meetTeamMembers.${idx}.role`}
+                          value={member.role}
+                          className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-foreground/55"
+                        />
+                        {member.bio ? (
+                          <EditableMarkdown
+                            path={`pages.about.meetTeamMembers.${idx}.bio`}
+                            value={member.bio}
+                            className="mt-3 text-sm text-foreground/72"
+                          />
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

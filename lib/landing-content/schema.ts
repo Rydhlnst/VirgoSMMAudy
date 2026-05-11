@@ -60,7 +60,9 @@ export const aboutSchema = z.object({
   description: z.string().min(1, "Description wajib diisi"),
   readMoreText: z.string().min(1).default("Read more"),
   readLessText: z.string().min(1).default("Close"),
-  workflowLabel: z.string().min(1).default("WHAT WE DO"),
+  ctaText: z.string().min(1).default("Book a Call"),
+  ctaLink: z.string().min(1).default("/contact"),
+  workflowLabel: z.string().or(z.literal("")).default(""),
   workflowSteps: z
     .array(
       z.object({
@@ -69,10 +71,10 @@ export const aboutSchema = z.object({
       }),
     )
     .default([
-      { title: "Discover", description: "Clarify goals, audience, and offer." },
-      { title: "Plan", description: "Build the system: content pillars + calendar." },
-      { title: "Create", description: "Design, write, and produce on-brand assets." },
-      { title: "Optimize", description: "Review results and iterate weekly." },
+      { title: "Understand", description: "" },
+      { title: "Organize", description: "" },
+      { title: "Execute", description: "" },
+      { title: "Improve", description: "" },
     ]),
 });
 
@@ -401,3 +403,20 @@ export const landingPageContentSchema = z.object({
     })
     .default({ images: {} }),
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

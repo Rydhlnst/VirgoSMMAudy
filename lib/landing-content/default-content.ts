@@ -49,12 +49,14 @@ const RAW_DEFAULT_LANDING_PAGE_CONTENT = {
 
   about: {
     title: "ABOUT",
-    label: "What we do",
+    label: "Who we are",
     description:
       "We help businesses save time and stay consistent by handling administrative tasks, inbox and calendar management, social media support, Canva designs, customer service, content planning, and workflow organization.",
     readMoreText: "Read more",
     readLessText: "Close",
-    workflowLabel: "WHAT WE DO",
+    ctaText: "Book a Call",
+    ctaLink: "/contact",
+    workflowLabel: "",
     workflowSteps: [
       { title: "Discover", description: "Clarify goals, audience, and offer." },
       { title: "Plan", description: "Build the system: content pillars + calendar." },

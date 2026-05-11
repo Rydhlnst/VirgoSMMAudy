@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { EditableText } from "@/components/cms/EditableText";
@@ -11,7 +11,7 @@ type WorkflowStep = { title: string; description?: string };
 
 export function AboutWorkflowClient({
   steps,
-  workflowLabel,
+  workflowLabel: _workflowLabel,
 }: {
   steps: WorkflowStep[];
   workflowLabel?: string;
@@ -23,15 +23,8 @@ export function AboutWorkflowClient({
 
   return (
     <div className="rounded-3xl border border-foreground/10 bg-foreground/2 p-5 sm:p-6">
-      <div className="flex items-center justify-between gap-3">
-        <EditableText
-          as="div"
-          path="about.workflowLabel"
-          value={workflowLabel || "WHAT WE DO"}
-          className="text-xs font-extrabold uppercase tracking-[0.22em] text-foreground/60"
-        />
-
-        {context?.isEditMode ? (
+      {context?.isEditMode ? (
+        <div className="flex items-center justify-end">
           <Button
             type="button"
             variant="outline"
@@ -39,7 +32,7 @@ export function AboutWorkflowClient({
             className="h-9 px-4"
             onClick={() => {
               context.updateField("about.workflowSteps", [
-              ...(Array.isArray(stepsValue) ? stepsValue : []),
+                ...(Array.isArray(stepsValue) ? stepsValue : []),
                 { title: "New step", description: "" },
               ]);
             }}
@@ -47,10 +40,10 @@ export function AboutWorkflowClient({
             <Plus className="h-4 w-4" aria-hidden />
             Add step
           </Button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
-      <div className="mt-5 space-y-4">
+      <div className={context?.isEditMode ? "mt-5 space-y-4" : "space-y-4"}>
         {safeSteps.map((step, idx) => (
           <div key={`${step.title}-${idx}`} className="relative pl-7">
             {idx !== safeSteps.length - 1 ? (
@@ -64,7 +57,7 @@ export function AboutWorkflowClient({
             <EditableText
               as="div"
               path={`about.workflowSteps.${idx}.title`}
-              value={step.title}
+              value={`0${idx + 1} ${step.title}`}
               className="text-sm font-semibold text-foreground"
             />
             <EditableTextarea

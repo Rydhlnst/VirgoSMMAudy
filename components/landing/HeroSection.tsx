@@ -63,7 +63,7 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
                       as="div"
                       path={`hero.tags.${idx}`}
                       value={t}
-                      className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weaker)]"
+                      className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-(--muted-foreground-weaker)"
                     />
                   ))}
 
@@ -81,14 +81,14 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
                     </button>
                   ) : null}
                 </div>
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+              </div>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center pt-6">
                   <Button asChild variant="accent" size="lg" className="h-12 px-8">
                     <Link href={hero.ctaLink}>
                       <EditableText path="hero.ctaText" value={hero.ctaText} />
                     </Link>
                   </Button>
                 </div>
-              </div>
             </div>
           </div>
         </div>

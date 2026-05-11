@@ -55,7 +55,7 @@ export function ContactForm() {
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="subject">Subject</Label>
+          <Label htmlFor="subject">Business Name</Label>
           <Input id="subject" placeholder="Business Name" {...register("subject")} />
           {errors.subject?.message ? <p className="text-sm text-red-500">{errors.subject.message}</p> : null}
         </div>

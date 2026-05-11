@@ -2,11 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TextAreaField, TextField } from "../Field";
+import { MarkdownField, TextField } from "../Field";
 import { ImageUrlInput } from "../ImageUrlInput";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function HeroCMSForm() {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const tags = useFieldArray({ control, name: "hero.tags" as const });
 
@@ -20,7 +22,7 @@ export function HeroCMSForm() {
           <TextField name="hero.badge" label="Badge" placeholder="SOCIAL MEDIA MANAGER" />
           <TextField name="hero.title" label="Title" placeholder="Big bold heading..." />
         </div>
-        <TextAreaField name="hero.description" label="Description" rows={4} />
+        <MarkdownField name="hero.description" label="Description (Markdown)" />
         <ImageUrlInput name="hero.imageUrl" label="Hero Image URL" />
         <div className="grid gap-4 md:grid-cols-2">
           <TextField name="hero.ctaText" label="CTA Text" placeholder="Book a Call" />
@@ -29,7 +31,15 @@ export function HeroCMSForm() {
 
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold">Tags</div>
-          <Button type="button" variant="accent" size="sm" onClick={() => tags.append("New tag")}>
+          <Button
+            type="button"
+            variant="accent"
+            size="sm"
+            onClick={() => {
+              tags.append("New tag");
+              crudToast.created("Hero tag");
+            }}
+          >
             Add Tag
           </Button>
         </div>
@@ -40,7 +50,15 @@ export function HeroCMSForm() {
                 <TextField name={`hero.tags.${idx}`} label={`Tag ${idx + 1}`} placeholder="Content Creation" />
               </div>
               <div className="md:col-span-2 md:flex md:items-end">
-                <Button type="button" variant="outline" className="w-full" onClick={() => tags.remove(idx)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    tags.remove(idx);
+                    crudToast.deleted("Hero tag");
+                  }}
+                >
                   Remove
                 </Button>
               </div>
@@ -51,4 +69,3 @@ export function HeroCMSForm() {
     </Card>
   );
 }
-

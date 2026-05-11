@@ -3,6 +3,7 @@ import { SectionHeading } from "./SectionHeading";
 import { TypingBubbleClient } from "./TypingBubbleClient";
 import { ThumbsUp } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 
 export function IntroductionSection({ introduction }: { introduction: LandingPageContent["introduction"] }) {
   return (
@@ -12,9 +13,11 @@ export function IntroductionSection({ introduction }: { introduction: LandingPag
           <div className="flex h-full flex-col">
             <SectionHeading title={introduction.title} />
             <div className="mt-8 rounded-[44px] bg-[color:var(--surface-inverse)] p-8 text-[color:var(--surface-inverse-foreground)] shadow-[var(--shadow-2)]">
-              <p className="app-description text-base text-[color:var(--inverse-muted-foreground)] sm:text-lg">
-                {introduction.description}
-              </p>
+              <MarkdownContent
+                content={introduction.description}
+                className="text-base text-[color:var(--inverse-muted-foreground)] sm:text-lg"
+                tone="dark"
+              />
             </div>
           </div>
         </div>

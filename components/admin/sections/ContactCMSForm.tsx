@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { TextAreaField, TextField } from "../Field";
+import { MarkdownField, TextField } from "../Field";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function ContactCMSForm() {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const links = useFieldArray({ control, name: "contact.socialLinks" as const });
 
@@ -17,7 +19,7 @@ export function ContactCMSForm() {
       </CardHeader>
       <CardContent className="grid gap-6">
         <TextField name="contact.title" label="CTA Title" />
-        <TextAreaField name="contact.description" label="Description" rows={4} />
+        <MarkdownField name="contact.description" label="Description (Markdown)" />
         <div className="grid gap-4 md:grid-cols-2">
           <TextField name="contact.whatsappText" label="WhatsApp Button Text" />
           <TextField name="contact.whatsappLink" label="WhatsApp Link" placeholder="https://wa.me/628..." />
@@ -30,7 +32,10 @@ export function ContactCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() => links.append({ platform: "Instagram", url: "" })}
+            onClick={() => {
+              links.append({ platform: "Instagram", url: "" });
+              crudToast.created("Contact social link");
+            }}
           >
             Add Social
           </Button>
@@ -46,7 +51,15 @@ export function ContactCMSForm() {
                 <TextField name={`contact.socialLinks.${idx}.url`} label="URL" placeholder="https://..." />
               </div>
               <div className="md:col-span-2 md:flex md:items-end">
-                <Button type="button" variant="outline" className="w-full" onClick={() => links.remove(idx)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    links.remove(idx);
+                    crudToast.deleted("Contact social link");
+                  }}
+                >
                   Remove
                 </Button>
               </div>
@@ -57,4 +70,3 @@ export function ContactCMSForm() {
     </Card>
   );
 }
-

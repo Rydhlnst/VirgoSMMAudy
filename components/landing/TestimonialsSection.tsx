@@ -3,6 +3,7 @@ import { Heart, MessageCircle } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { TypingBubbleClient } from "./TypingBubbleClient";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 
 export function TestimonialsSection({ testimonials }: { testimonials: LandingPageContent["testimonials"] }) {
   return (
@@ -59,9 +60,11 @@ export function TestimonialsSection({ testimonials }: { testimonials: LandingPag
                       </div>
                     ) : null}
                     {t.description ? (
-                      <div className="mt-2 text-sm leading-6 text-[color:var(--inverse-muted-foreground)]">
-                        {t.description}
-                      </div>
+                      <MarkdownContent
+                        content={t.description}
+                        className="mt-2 text-sm text-[color:var(--inverse-muted-foreground)]"
+                        tone="dark"
+                      />
                     ) : null}
 
                     <blockquote className="mt-4 text-sm leading-6 text-[color:var(--inverse-muted-foreground)]">

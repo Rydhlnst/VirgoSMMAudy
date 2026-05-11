@@ -1,22 +1,39 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { LandingContentAdmin } from "@/components/admin/LandingContentAdmin";
+import { AdminSessionActions } from "@/components/admin/AdminSessionActions";
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
+import { auth } from "@/lib/auth";
+import { isAdminSession } from "@/lib/auth/admin";
 import Link from "next/link";
-import { Toaster } from "sonner";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!isAdminSession(session)) {
+    redirect("/admin/login?reason=unauthorized");
+  }
+  const adminSession = session as NonNullable<typeof session>;
+
   return (
-    <div className="min-h-[calc(100vh-1px)] bg-[color:var(--background)]">
-      {/* TODO(phase-2): add auth protection if needed */}
-      <div className="border-b border-[color:var(--inverse-border-subtle)] bg-[color:var(--surface-inverse)] text-[color:var(--surface-inverse-foreground)]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="hero-name text-sm">CMS Admin</div>
-          <Link
-            href="/"
-            className="rounded-full border border-[color:var(--inverse-border-subtle)] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.2em] text-[color:var(--inverse-muted-foreground)] transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:text-[color:var(--surface-inverse-foreground)] active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
-          >
-            View Site
-          </Link>
+    <div className="min-h-screen bg-[color:var(--background)]">
+      <div className="border-b border-[color:var(--border-subtle)] bg-[color:var(--card)]/90 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 py-4 sm:px-6">
+          <div>
+            <div className="text-sm font-black uppercase tracking-[0.2em] text-[color:var(--muted-foreground-weak)]">CMS Admin</div>
+            <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">ShadCN-based content editor</div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="/">View Site</Link>
+            </Button>
+            <AdminSessionActions email={adminSession.user.email} />
+          </div>
         </div>
       </div>
       <LandingContentAdmin />

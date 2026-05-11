@@ -1,6 +1,6 @@
 import type { LandingPageContent } from "@/lib/landing-content/types";
-import { SectionHeading } from "./SectionHeading";
 import Image from "next/image";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 
 function NotchedO({ className }: { className?: string }) {
   return (
@@ -50,7 +50,12 @@ export function AboutSection({ about }: { about: LandingPageContent["about"] }) 
             </div>
 
             <div className="md:col-span-7">
-              <p className="max-w-2xl text-base leading-7 text-foreground/70 sm:text-lg">{about.description}</p>
+              <div className="rounded-3xl border border-foreground/10 bg-foreground/[0.02] p-5 sm:p-6">
+                <MarkdownContent
+                  content={about.description}
+                  className="max-w-none text-sm text-foreground/75 sm:text-base md:text-[17px] md:leading-8 md:columns-2 md:gap-8 [&_p]:break-inside-avoid-column"
+                />
+              </div>
               <div className="mt-6 h-0.5 w-16 bg-foreground/25" />
             </div>
           </div>

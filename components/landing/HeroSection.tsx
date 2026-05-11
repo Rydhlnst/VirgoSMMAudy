@@ -3,6 +3,7 @@ import type { LandingPageContent } from "@/lib/landing-content/types";
 import { Heart } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 
 export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
   const tags = hero.tags.filter(Boolean);
@@ -33,9 +34,10 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
             </div>
 
             {hero.description ? (
-              <p className="app-description mt-6 max-w-xl text-center text-base text-[color:var(--muted-foreground)] sm:text-lg lg:text-left">
-                {hero.description}
-              </p>
+              <MarkdownContent
+                content={hero.description}
+                className="mt-6 max-w-xl text-center text-base text-[color:var(--muted-foreground)] sm:text-lg lg:text-left"
+              />
             ) : null}
 
             <div className="mt-auto pt-10">

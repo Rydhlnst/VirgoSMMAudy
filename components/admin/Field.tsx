@@ -3,17 +3,20 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { cn } from "@/lib/utils";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 function getErrorAtPath(errors: unknown, path: string): string | undefined {
   const parts = path.split(".");
-  let cur: any = errors;
+  let cur: unknown = errors;
   for (const p of parts) {
-    if (!cur) return undefined;
-    cur = cur[p];
+    if (!cur || typeof cur !== "object") return undefined;
+    cur = (cur as Record<string, unknown>)[p];
   }
-  return typeof cur?.message === "string" ? cur.message : undefined;
+  if (!cur || typeof cur !== "object") return undefined;
+  const maybeMessage = (cur as { message?: unknown }).message;
+  return typeof maybeMessage === "string" ? maybeMessage : undefined;
 }
 
 export function TextField({
@@ -72,6 +75,48 @@ export function TextAreaField({
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={name}>{label}</Label>
       <Textarea id={name} placeholder={placeholder} rows={rows} {...register(name)} />
+      {helperText ? <div className="text-xs text-[color:var(--muted-foreground-weak)]">{helperText}</div> : null}
+      {msg ? <div className="text-xs font-semibold text-red-600">{msg}</div> : null}
+    </div>
+  );
+}
+
+export function MarkdownField({
+  name,
+  label,
+  placeholder,
+  helperText,
+  className,
+  minHeightClassName,
+}: {
+  name: string;
+  label: string;
+  placeholder?: string;
+  helperText?: string;
+  className?: string;
+  minHeightClassName?: string;
+}) {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const msg = getErrorAtPath(errors, name);
+
+  return (
+    <div className={cn("grid gap-2", className)}>
+      <Label htmlFor={name}>{label}</Label>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <MarkdownEditor
+            value={typeof field.value === "string" ? field.value : ""}
+            onChange={field.onChange}
+            placeholder={placeholder}
+            minHeightClassName={minHeightClassName}
+          />
+        )}
+      />
       {helperText ? <div className="text-xs text-[color:var(--muted-foreground-weak)]">{helperText}</div> : null}
       {msg ? <div className="text-xs font-semibold text-red-600">{msg}</div> : null}
     </div>

@@ -1,30 +1,36 @@
-import { landingPageContentSchema } from "@/lib/landing-content/schema";
-import { readLandingPageContent, writeLandingPageContent } from "@/lib/landing-content/storage";
+import { toErrorResponse } from "@/lib/api/errors";
+import { safeJson } from "@/lib/api/parse-request";
+import { errorResponse, successResponse } from "@/lib/api/response";
+import { requireAdmin } from "@/lib/auth/require-admin";
+import { getPublicLandingContent, upsertAdminLandingContent } from "@/lib/landing-content/landing-content.service";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const data = await readLandingPageContent();
-  return Response.json({ success: true, data });
-}
-
-export async function PATCH(request: Request) {
   try {
-    const json = (await request.json()) as unknown;
-    const parsed = landingPageContentSchema.safeParse(json);
-    if (!parsed.success) {
-      return Response.json(
-        { success: false, error: "Validation error", issues: parsed.error.flatten() },
-        { status: 400 },
-      );
-    }
-
-    const saved = await writeLandingPageContent(parsed.data);
-    return Response.json({ success: true, data: saved });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return Response.json({ success: false, error: message }, { status: 500 });
+    const data = await getPublicLandingContent();
+    return successResponse(data);
+  } catch (error) {
+    return toErrorResponse(error);
   }
 }
 
+export async function PATCH(request: Request) {
+  const admin = await requireAdmin(request);
+  if (!admin.success) {
+    return admin.response;
+  }
+
+  const body = await safeJson(request);
+  if (body === null) {
+    return errorResponse("BAD_REQUEST", "Invalid JSON body.", 400);
+  }
+
+  try {
+    const data = await upsertAdminLandingContent(body);
+    return successResponse(data, { message: "Landing page content updated successfully." });
+  } catch (error) {
+    return toErrorResponse(error);
+  }
+}

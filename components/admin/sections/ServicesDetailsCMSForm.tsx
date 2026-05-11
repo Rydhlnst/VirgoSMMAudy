@@ -3,11 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { TextAreaField, TextField } from "../Field";
+import { MarkdownField, TextField } from "../Field";
 import { ImageUrlInput } from "../ImageUrlInput";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 function BulletsEditor({ name }: { name: `servicesDetails.${"categories" | "industries"}.${number}.bullets` }) {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const bullets = useFieldArray({ control, name });
 
@@ -15,7 +17,15 @@ function BulletsEditor({ name }: { name: `servicesDetails.${"categories" | "indu
     <div className="grid gap-3">
       <div className="flex items-center justify-between">
         <div className="text-sm font-semibold">Bullets</div>
-        <Button type="button" variant="accent" size="sm" onClick={() => bullets.append("New bullet")}>
+        <Button
+          type="button"
+          variant="accent"
+          size="sm"
+          onClick={() => {
+            bullets.append("New bullet");
+            crudToast.created("Support bullet");
+          }}
+        >
           Add Bullet
         </Button>
       </div>
@@ -29,7 +39,15 @@ function BulletsEditor({ name }: { name: `servicesDetails.${"categories" | "indu
               <TextField name={`${name}.${idx}`} label={`Bullet ${idx + 1}`} placeholder="Email & inbox management" />
             </div>
             <div className="md:col-span-2 md:flex md:items-end">
-              <Button type="button" variant="outline" className="w-full" onClick={() => bullets.remove(idx)}>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  bullets.remove(idx);
+                  crudToast.deleted("Support bullet");
+                }}
+              >
                 Remove
               </Button>
             </div>
@@ -63,7 +81,7 @@ function SupportItemEditor({
         <TextField name={`${base}.title`} label="Title" placeholder="Administrative Support" />
         <TextField name={`${base}.slug`} label="Slug" placeholder="administrative-support" helperText="lowercase, gunakan '-'." />
       </div>
-      <TextAreaField name={`${base}.description`} label="Description (optional)" rows={3} />
+      <MarkdownField name={`${base}.description`} label="Description (Markdown, optional)" />
       <ImageUrlInput name={`${base}.heroImageUrl`} label="Hero Image URL (optional)" />
       <BulletsEditor name={`${base}.bullets`} />
     </div>
@@ -71,6 +89,7 @@ function SupportItemEditor({
 }
 
 export function ServicesDetailsCMSForm() {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const categories = useFieldArray({ control, name: "servicesDetails.categories" as const });
   const industries = useFieldArray({ control, name: "servicesDetails.industries" as const });
@@ -85,7 +104,7 @@ export function ServicesDetailsCMSForm() {
           <TextField name="servicesDetails.name" label="Service Name" placeholder="Virgo Social Services" />
           <TextField name="services.viewAllLink" label="Landing View-All Link" placeholder="/services" />
         </div>
-        <TextAreaField name="servicesDetails.intro" label="Intro (optional)" rows={4} />
+        <MarkdownField name="servicesDetails.intro" label="Intro (Markdown, optional)" />
 
         <Separator />
 
@@ -95,22 +114,31 @@ export function ServicesDetailsCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() =>
+            onClick={() => {
               categories.append({
                 slug: "new-category",
                 title: "New Category",
                 description: "",
                 heroImageUrl: "",
                 bullets: ["New bullet"],
-              })
-            }
+              });
+              crudToast.created("Support category");
+            }}
           >
             Add Category
           </Button>
         </div>
         <div className="grid gap-5">
           {categories.fields.map((f, idx) => (
-            <SupportItemEditor key={f.id} index={idx} group="categories" onRemove={() => categories.remove(idx)} />
+            <SupportItemEditor
+              key={f.id}
+              index={idx}
+              group="categories"
+              onRemove={() => {
+                categories.remove(idx);
+                crudToast.deleted("Support category");
+              }}
+            />
           ))}
         </div>
 
@@ -122,22 +150,31 @@ export function ServicesDetailsCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() =>
+            onClick={() => {
               industries.append({
                 slug: "new-industry",
                 title: "New Industry",
                 description: "",
                 heroImageUrl: "",
                 bullets: ["New bullet"],
-              })
-            }
+              });
+              crudToast.created("Support industry");
+            }}
           >
             Add Industry
           </Button>
         </div>
         <div className="grid gap-5">
           {industries.fields.map((f, idx) => (
-            <SupportItemEditor key={f.id} index={idx} group="industries" onRemove={() => industries.remove(idx)} />
+            <SupportItemEditor
+              key={f.id}
+              index={idx}
+              group="industries"
+              onRemove={() => {
+                industries.remove(idx);
+                crudToast.deleted("Support industry");
+              }}
+            />
           ))}
         </div>
       </CardContent>

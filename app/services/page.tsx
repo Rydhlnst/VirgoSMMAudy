@@ -1,4 +1,5 @@
 import { LandingShell } from "@/components/landing/LandingShell";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import Link from "next/link";
@@ -13,14 +14,12 @@ function ServiceCard({
   href,
   title,
   description,
-  bulletsCount,
   pointsText,
   detailText,
 }: {
   href: string;
   title: string;
   description?: string;
-  bulletsCount: number;
   pointsText: string;
   detailText: string;
 }) {
@@ -32,7 +31,7 @@ function ServiceCard({
       <Skeleton className="aspect-[4/3] w-full rounded-[34px]" />
       <div className="mt-5">
         <div className="hero-name text-2xl">{title}</div>
-        {description ? <div className="app-description mt-2 text-sm text-foreground/70">{description}</div> : null}
+        {description ? <MarkdownContent content={description} className="mt-2 text-sm text-foreground/70" /> : null}
         <div className="mt-4 flex items-center justify-between gap-4">
           <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">
             {pointsText}
@@ -60,7 +59,7 @@ export default async function ServicesPage() {
               {page.badge}
             </div>
             <h1 className="hero-name mt-4 text-[64px] leading-[0.9] sm:text-[84px] md:text-[108px]">{details.name}</h1>
-            {details.intro ? <p className="app-description mt-6 max-w-2xl text-base text-foreground/75 sm:text-lg">{details.intro}</p> : null}
+            {details.intro ? <MarkdownContent content={details.intro} className="mt-6 max-w-2xl text-base text-foreground/75 sm:text-lg" /> : null}
           </div>
           <div className="md:col-span-5">
             <div className="rounded-[52px] border border-foreground/10 bg-foreground p-6 text-background">
@@ -94,7 +93,6 @@ export default async function ServicesPage() {
                   href={`/services/${c.slug}`}
                   title={c.title}
                   description={c.description}
-                  bulletsCount={c.bullets.length}
                   pointsText={page.cardPointsText.replace("{count}", `${c.bullets.length}`)}
                   detailText={page.cardDetailText}
                 />
@@ -121,7 +119,6 @@ export default async function ServicesPage() {
                   href={`/services/${c.slug}`}
                   title={c.title}
                   description={c.description}
-                  bulletsCount={c.bullets.length}
                   pointsText={page.cardPointsText.replace("{count}", `${c.bullets.length}`)}
                   detailText={page.cardDetailText}
                 />

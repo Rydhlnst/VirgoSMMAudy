@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 
 export function SectionHeading({
   kicker,
@@ -34,16 +35,16 @@ export function SectionHeading({
         {title}
       </h2>
       {description ? (
-        <p
+        <MarkdownContent
+          content={description}
           className={cn(
             "app-description mt-3 max-w-2xl text-base sm:text-lg",
             tone === "dark"
               ? "text-(--inverse-muted-foreground)"
               : "text-(--muted-foreground)",
           )}
-        >
-          {description}
-        </p>
+          tone={tone}
+        />
       ) : null}
     </div>
   );

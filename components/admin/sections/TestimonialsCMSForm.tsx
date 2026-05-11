@@ -3,11 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { TextAreaField, TextField } from "../Field";
+import { MarkdownField, TextAreaField, TextField } from "../Field";
 import { ImageUrlInput } from "../ImageUrlInput";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function TestimonialsCMSForm() {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const items = useFieldArray({ control, name: "testimonials.items" as const });
 
@@ -18,7 +20,7 @@ export function TestimonialsCMSForm() {
       </CardHeader>
       <CardContent className="grid gap-6">
         <TextField name="testimonials.title" label="Section Title" placeholder="TESTIMONIALS" />
-        <TextAreaField name="testimonials.description" label="Section Description (optional)" rows={3} />
+        <MarkdownField name="testimonials.description" label="Section Description (Markdown, optional)" />
 
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold">Items</div>
@@ -26,7 +28,7 @@ export function TestimonialsCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() =>
+            onClick={() => {
               items.append({
                 name: "New Client",
                 role: "",
@@ -35,8 +37,9 @@ export function TestimonialsCMSForm() {
                 quote: "Great work!",
                 workImageUrl: "",
                 imageUrl: "",
-              })
-            }
+              });
+              crudToast.created("Testimonial");
+            }}
           >
             Add Testimonial
           </Button>
@@ -52,7 +55,11 @@ export function TestimonialsCMSForm() {
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <TextField name={`testimonials.items.${idx}.workTitle`} label="Work Title (optional)" placeholder="Project name" />
-                <TextField name={`testimonials.items.${idx}.description`} label="Work Description (optional)" placeholder="Short result/summary" />
+                <MarkdownField
+                  name={`testimonials.items.${idx}.description`}
+                  label="Work Description (Markdown, optional)"
+                  minHeightClassName="min-h-[130px]"
+                />
               </div>
               <TextAreaField name={`testimonials.items.${idx}.quote`} label="Quote" rows={4} />
               <div className="grid gap-4 md:grid-cols-2">
@@ -60,7 +67,14 @@ export function TestimonialsCMSForm() {
                 <ImageUrlInput name={`testimonials.items.${idx}.imageUrl`} label="Client Image URL (optional)" />
               </div>
               <div className="flex justify-end">
-                <Button type="button" variant="outline" onClick={() => items.remove(idx)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    items.remove(idx);
+                    crudToast.deleted("Testimonial");
+                  }}
+                >
                   Remove
                 </Button>
               </div>

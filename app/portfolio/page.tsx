@@ -1,5 +1,6 @@
 import { Divider } from "@/components/landing/Divider";
 import { LandingShell } from "@/components/landing/LandingShell";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import Link from "next/link";
@@ -134,7 +135,7 @@ export default async function PortfolioPage() {
                   </div>
                 </div>
 
-                {d.brief?.length ? <p className="app-description mt-5 max-w-3xl text-sm text-foreground/75 sm:text-base">{d.brief}</p> : null}
+                {d.brief?.length ? <MarkdownContent content={d.brief} className="mt-5 max-w-3xl text-sm text-foreground/75 sm:text-base" /> : null}
 
                 <div className="mt-8 grid gap-4 md:grid-cols-2">
                   <div className="rounded-[36px] border border-foreground/10 bg-background p-6">
@@ -172,7 +173,7 @@ export default async function PortfolioPage() {
                 {d.result?.length ? (
                   <div className="mt-6 rounded-[36px] border border-foreground/10 bg-foreground p-6 text-background">
                     <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-background/70">{page.resultLabel}</div>
-                    <div className="mt-3 text-sm text-background/85">{d.result}</div>
+                    <MarkdownContent content={d.result} className="mt-3 text-sm text-background/85" tone="dark" />
                   </div>
                 ) : null}
               </div>

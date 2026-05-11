@@ -3,11 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { TextAreaField, TextField } from "../Field";
+import { MarkdownField, TextField } from "../Field";
 import { ImageUrlInput } from "../ImageUrlInput";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function WorkProcessCMSForm() {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const steps = useFieldArray({ control, name: "workProcess.steps" as const });
 
@@ -25,7 +27,10 @@ export function WorkProcessCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() => steps.append({ number: "01", title: "New Step", description: "", icon: "" })}
+            onClick={() => {
+              steps.append({ number: "01", title: "New Step", description: "", icon: "" });
+              crudToast.created("Work process step");
+            }}
           >
             Add Step
           </Button>
@@ -35,14 +40,25 @@ export function WorkProcessCMSForm() {
         <div className="grid gap-4">
           {steps.fields.map((f, idx) => (
             <div key={f.id} className="grid gap-4 rounded-3xl border border-[color:var(--border)]/15 p-4">
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2">
                 <TextField name={`workProcess.steps.${idx}.number`} label="Number" placeholder="01" />
                 <TextField name={`workProcess.steps.${idx}.title`} label="Title" placeholder="Audit" />
-                <ImageUrlInput name={`workProcess.steps.${idx}.icon`} label="Step Image URL (optional)" />
               </div>
-              <TextAreaField name={`workProcess.steps.${idx}.description`} label="Description" rows={3} />
+              <MarkdownField
+                name={`workProcess.steps.${idx}.description`}
+                label="Description (Markdown)"
+                minHeightClassName="min-h-[120px]"
+              />
+              <ImageUrlInput name={`workProcess.steps.${idx}.icon`} label="Step Image URL (optional)" />
               <div className="flex justify-end">
-                <Button type="button" variant="outline" onClick={() => steps.remove(idx)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    steps.remove(idx);
+                    crudToast.deleted("Work process step");
+                  }}
+                >
                   Remove
                 </Button>
               </div>

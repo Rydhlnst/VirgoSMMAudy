@@ -1,4 +1,5 @@
 import { LandingShell } from "@/components/landing/LandingShell";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import Link from "next/link";
@@ -37,7 +38,7 @@ export default async function AboutPage() {
           <div className="md:col-span-5">
             <div className="rounded-[36px] border border-foreground/10 bg-card p-6">
               <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">{intro.title}</div>
-              <p className="app-description mt-4 text-sm text-foreground/75 sm:text-base">{intro.description}</p>
+              <MarkdownContent content={intro.description} className="mt-4 text-sm text-foreground/75 sm:text-base" />
             </div>
           </div>
         </div>
@@ -80,7 +81,7 @@ export default async function AboutPage() {
           <div className="md:col-span-7">
             <div className="rounded-[48px] border border-foreground/10 bg-card p-6 sm:p-8">
               <div className="text-xs font-black tracking-[0.22em] text-foreground/60">{page.storyLabel}</div>
-              <p className="app-description mt-4 text-base text-foreground/80 sm:text-lg">{about.description}</p>
+              <MarkdownContent content={about.description} className="mt-4 text-base text-foreground/80 sm:text-lg" />
               <div className="mt-8 grid gap-4 sm:grid-cols-3">
                 {about.images.slice(0, 3).map((img, idx) => (
                   <div key={`${img.alt}-${idx}`} className="rounded-[28px] border border-foreground/10 bg-background p-3">
@@ -119,7 +120,7 @@ export default async function AboutPage() {
                     </div>
                     <div className="sm:col-span-9">
                       <div className="hero-name text-2xl">{s.title}</div>
-                      {s.description ? <div className="app-description mt-2 text-sm text-foreground/70">{s.description}</div> : null}
+                      {s.description ? <MarkdownContent content={s.description} className="mt-2 text-sm text-foreground/70" /> : null}
                     </div>
                   </div>
                 ))}

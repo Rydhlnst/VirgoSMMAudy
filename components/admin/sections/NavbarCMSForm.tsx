@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { TextField } from "../Field";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function NavbarCMSForm() {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const menu = useFieldArray({ control, name: "navbar.menu" as const });
 
@@ -32,7 +34,10 @@ export function NavbarCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() => menu.append({ label: "New", href: "#section" })}
+            onClick={() => {
+              menu.append({ label: "New", href: "#section" });
+              crudToast.created("Navbar menu item");
+            }}
           >
             Add Item
           </Button>
@@ -47,7 +52,15 @@ export function NavbarCMSForm() {
                 <TextField name={`navbar.menu.${idx}.href`} label="Href" placeholder="#about" />
               </div>
               <div className="md:col-span-2 md:flex md:items-end">
-                <Button type="button" variant="outline" className="w-full" onClick={() => menu.remove(idx)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    menu.remove(idx);
+                    crudToast.deleted("Navbar menu item");
+                  }}
+                >
                   Remove
                 </Button>
               </div>
@@ -58,4 +71,3 @@ export function NavbarCMSForm() {
     </Card>
   );
 }
-

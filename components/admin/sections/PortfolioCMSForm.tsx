@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { TextAreaField, TextField } from "../Field";
+import { MarkdownField, TextAreaField, TextField } from "../Field";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUrlInput } from "../ImageUrlInput";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 function LinesField({ name, label, rows = 4 }: { name: string; label: string; rows?: number }) {
-  const { setValue, watch, formState } = useFormContext();
+  const { setValue, watch } = useFormContext();
   const value = watch(name) as unknown;
   const text = Array.isArray(value) ? value.join("\n") : "";
 
@@ -26,17 +27,15 @@ function LinesField({ name, label, rows = 4 }: { name: string; label: string; ro
             .split("\n")
             .map((l) => l.trim())
             .filter(Boolean);
-          setValue(name as any, next, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+          setValue(name as never, next as never, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
         }}
       />
-      {Array.isArray((formState.errors as any)?.[name]?.message) ? (
-        <div className="text-xs font-semibold text-red-600">{String((formState.errors as any)[name].message)}</div>
-      ) : null}
     </div>
   );
 }
 
 export function PortfolioCMSForm() {
+  const crudToast = useCrudToast();
   const { control, register } = useFormContext();
   const items = useFieldArray({ control, name: "portfolio.items" as const });
   const details = useFieldArray({ control, name: "portfolioDetails.projects" as const });
@@ -65,6 +64,7 @@ export function PortfolioCMSForm() {
                 deliverables: [],
                 result: "",
               });
+              crudToast.created("Portfolio item");
             }}
           >
             Add Item
@@ -94,19 +94,19 @@ export function PortfolioCMSForm() {
               </div>
               <ImageUrlInput name={`portfolio.items.${idx}.thumbnailUrl`} label="Thumbnail URL" />
               <TextAreaField name={`portfolio.items.${idx}.caption`} label="Caption (optional)" rows={3} />
-                <div className="grid gap-4 rounded-3xl border border-[color:var(--border)]/10 bg-[color:var(--overlay-1)] p-4">
-                  <div className="text-sm font-semibold">Details</div>
-                  <TextField name={`portfolioDetails.projects.${idx}.title`} label="Title (match item)" placeholder="Project title" />
-                  <TextField name={`portfolioDetails.projects.${idx}.client`} label="Client (optional)" placeholder="Client name / type" />
-                  <TextAreaField name={`portfolioDetails.projects.${idx}.brief`} label="Client brief" rows={3} />
-                  <LinesField name={`portfolioDetails.projects.${idx}.approach`} label="Approach (one per line)" rows={4} />
-                  <LinesField
-                    name={`portfolioDetails.projects.${idx}.deliverables`}
-                    label="Deliverables (one per line)"
-                    rows={4}
-                  />
-                  <TextAreaField name={`portfolioDetails.projects.${idx}.result`} label="Result / outcome" rows={3} />
-                </div>
+              <div className="grid gap-4 rounded-3xl border border-[color:var(--border)]/10 bg-[color:var(--overlay-1)] p-4">
+                <div className="text-sm font-semibold">Details</div>
+                <TextField name={`portfolioDetails.projects.${idx}.title`} label="Title (match item)" placeholder="Project title" />
+                <TextField name={`portfolioDetails.projects.${idx}.client`} label="Client (optional)" placeholder="Client name / type" />
+                <MarkdownField name={`portfolioDetails.projects.${idx}.brief`} label="Client Brief (Markdown)" />
+                <LinesField name={`portfolioDetails.projects.${idx}.approach`} label="Approach (one per line)" rows={4} />
+                <LinesField
+                  name={`portfolioDetails.projects.${idx}.deliverables`}
+                  label="Deliverables (one per line)"
+                  rows={4}
+                />
+                <MarkdownField name={`portfolioDetails.projects.${idx}.result`} label="Result / Outcome (Markdown)" />
+              </div>
               <div className="flex justify-end">
                 <Button
                   type="button"
@@ -114,6 +114,7 @@ export function PortfolioCMSForm() {
                   onClick={() => {
                     items.remove(idx);
                     details.remove(idx);
+                    crudToast.deleted("Portfolio item");
                   }}
                 >
                   Remove

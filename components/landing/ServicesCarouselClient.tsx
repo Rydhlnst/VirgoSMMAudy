@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 
 function formatIdr(input: string): string {
   const trimmed = input.trim();
@@ -142,7 +143,7 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
 
                   <div className="mt-5 flex flex-1 flex-col">
                     {svc.description ? (
-                      <div className="text-sm leading-6 text-[color:var(--muted-foreground)]">{svc.description}</div>
+                      <MarkdownContent content={svc.description} className="text-sm text-[color:var(--muted-foreground)]" />
                     ) : null}
                     {svc.includes?.length ? (
                       <ul className="mt-4 grid gap-2 text-left text-sm text-[color:var(--muted-foreground)]">

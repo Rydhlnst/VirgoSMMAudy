@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { TextField } from "../Field";
 import { ImageUrlInput } from "../ImageUrlInput";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function BrandStripCMSForm() {
+  const crudToast = useCrudToast();
   const { control } = useFormContext();
   const items = useFieldArray({ control, name: "brandStrip.items" as const });
 
@@ -23,7 +25,10 @@ export function BrandStripCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() => items.append({ name: "New Brand", imageUrl: "", link: "" })}
+            onClick={() => {
+              items.append({ name: "New Brand", imageUrl: "", link: "" });
+              crudToast.created("Brand item");
+            }}
           >
             Add Brand
           </Button>
@@ -46,7 +51,14 @@ export function BrandStripCMSForm() {
                 />
               </div>
               <div className="md:col-span-12">
-                <Button type="button" variant="outline" onClick={() => items.remove(idx)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    items.remove(idx);
+                    crudToast.deleted("Brand item");
+                  }}
+                >
                   Remove
                 </Button>
               </div>
@@ -57,4 +69,3 @@ export function BrandStripCMSForm() {
     </Card>
   );
 }
-

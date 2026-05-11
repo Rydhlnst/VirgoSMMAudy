@@ -1,5 +1,6 @@
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import Link from "next/link";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 
 function renderYearTemplate(text: string, year: number) {
   return text.replaceAll("{year}", String(year));
@@ -21,9 +22,11 @@ export function Footer({ footer }: { footer: LandingPageContent["footer"] }) {
               {footer.brandName}
             </Link>
             {footer.description ? (
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-(--inverse-muted-foreground)">
-                {footer.description}
-              </p>
+              <MarkdownContent
+                content={footer.description}
+                className="mt-4 max-w-md text-sm text-(--inverse-muted-foreground)"
+                tone="dark"
+              />
             ) : null}
           </div>
 

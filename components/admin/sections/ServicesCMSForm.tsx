@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { TextAreaField, TextField } from "../Field";
+import { MarkdownField, TextAreaField, TextField } from "../Field";
 import { ImageUrlInput } from "../ImageUrlInput";
+import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export function ServicesCMSForm() {
+  const crudToast = useCrudToast();
   const { control, watch, setValue } = useFormContext();
   const items = useFieldArray({ control, name: "services.items" as const });
 
@@ -29,7 +31,7 @@ export function ServicesCMSForm() {
             type="button"
             variant="accent"
             size="sm"
-            onClick={() =>
+            onClick={() => {
               items.append({
                 title: "Custom",
                 name: "New Service",
@@ -42,8 +44,9 @@ export function ServicesCMSForm() {
                 buttonText: "Get Started",
                 buttonLink: "#contact",
                 isHighlighted: false,
-              })
-            }
+              });
+              crudToast.created("Service package");
+            }}
           >
             Add Service
           </Button>
@@ -66,7 +69,7 @@ export function ServicesCMSForm() {
                   label="Hours Per Week (optional)"
                   placeholder="10 hours per week"
                 />
-                <TextAreaField name={`services.items.${idx}.description`} label="Description" rows={3} />
+                <MarkdownField name={`services.items.${idx}.description`} label="Description (Markdown)" />
                 <ImageUrlInput name={`services.items.${idx}.imageUrl`} label="Image URL" />
                 <div className="grid gap-4 md:grid-cols-2">
                   <TextField name={`services.items.${idx}.buttonText`} label="Button Text" placeholder="Get This" />
@@ -86,7 +89,15 @@ export function ServicesCMSForm() {
                       <div className="text-sm font-semibold">Includes</div>
                       <div className="text-xs text-[color:var(--muted-foreground-weak)]">Bullet list shown on the card.</div>
                     </div>
-                    <Button type="button" variant="accent" size="sm" onClick={() => includes.append("New bullet")}>
+                    <Button
+                      type="button"
+                      variant="accent"
+                      size="sm"
+                      onClick={() => {
+                        includes.append("New bullet");
+                        crudToast.created("Service bullet");
+                      }}
+                    >
                       Add Bullet
                     </Button>
                   </div>
@@ -104,7 +115,15 @@ export function ServicesCMSForm() {
                           />
                         </div>
                         <div className="md:col-span-2 md:flex md:items-end">
-                          <Button type="button" variant="outline" className="w-full" onClick={() => includes.remove(bIdx)}>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => {
+                              includes.remove(bIdx);
+                              crudToast.deleted("Service bullet");
+                            }}
+                          >
                             Remove
                           </Button>
                         </div>
@@ -123,7 +142,14 @@ export function ServicesCMSForm() {
                   />
                 </div>
                 <div className="flex justify-end">
-                  <Button type="button" variant="outline" onClick={() => items.remove(idx)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      items.remove(idx);
+                      crudToast.deleted("Service package");
+                    }}
+                  >
                     Remove
                   </Button>
                 </div>

@@ -1,5 +1,5 @@
 import { LandingShell } from "@/components/landing/LandingShell";
-import { Skeleton } from "@/components/ui/skeleton";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import Link from "next/link";
 
@@ -31,7 +31,7 @@ export default async function ContactPage() {
               {page.badge}
             </div>
             <h1 className="hero-name mt-4 text-[64px] leading-[0.9] sm:text-[84px] md:text-[108px]">{c.title}</h1>
-            {c.description ? <p className="app-description mt-6 max-w-2xl text-base text-foreground/75 sm:text-lg">{c.description}</p> : null}
+            {c.description ? <MarkdownContent content={c.description} className="mt-6 max-w-2xl text-base text-foreground/75 sm:text-lg" /> : null}
           </div>
           <div className="md:col-span-5">
             <div className="rounded-[44px] border border-foreground/10 bg-foreground p-6 text-background">

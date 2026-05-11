@@ -1,6 +1,7 @@
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import { Badge } from "@/components/ui/badge";
 import { LandingShell } from "@/components/landing/LandingShell";
+import { MarkdownContent } from "@/components/landing/MarkdownContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -29,7 +30,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">{details.name}</div>
             </div>
             <h1 className="hero-name mt-3 text-5xl sm:text-7xl">{item.title}</h1>
-            {item.description ? <p className="app-description mt-4 max-w-2xl text-base text-foreground/70">{item.description}</p> : null}
+            {item.description ? <MarkdownContent content={item.description} className="mt-4 max-w-2xl text-base text-foreground/70" /> : null}
           </div>
           <Link
             href="/services"

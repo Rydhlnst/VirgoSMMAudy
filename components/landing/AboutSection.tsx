@@ -1,6 +1,7 @@
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import { EditableText } from "@/components/cms/EditableText";
-import { EditableTextarea } from "@/components/cms/EditableTextarea";
+import { AboutDescriptionClient } from "./AboutDescriptionClient";
+import { AboutWorkflowClient } from "./AboutWorkflowClient";
 
 export function AboutSection({ about }: { about: LandingPageContent["about"] }) {
   return (
@@ -16,26 +17,31 @@ export function AboutSection({ about }: { about: LandingPageContent["about"] }) 
 
           <div className="grid gap-8 md:grid-cols-12 md:items-start">
             <div className="md:col-span-5">
-              <div className="inline-flex items-center gap-3">
-                <div className="relative">
-                  <EditableText
-                    as="div"
-                    path="about.label"
-                    value={about.label}
-                    className="rounded-full border-none border-accent px-5 py-2 text-sm font-semibold italic text-foreground"
-                  />
-                  <div className="pointer-events-none absolute -inset-2 -rotate-6 rounded-full border-none border-(--accent)/70" />
-                  <div className="pointer-events-none absolute -inset-3 rotate-3 rounded-full border border-(--accent)/40" />
+              <div className="flex flex-col gap-8">
+                <div className="inline-flex items-center gap-3">
+                  <div className="relative">
+                    <EditableText
+                      as="div"
+                      path="about.label"
+                      value={about.label}
+                      className="rounded-full border-none border-accent px-5 py-2 text-sm font-semibold italic text-foreground"
+                    />
+                    <div className="pointer-events-none absolute -inset-2 -rotate-6 rounded-full border-none border-(--accent)/70" />
+                    <div className="pointer-events-none absolute -inset-3 rotate-3 rounded-full border border-(--accent)/40" />
+                  </div>
                 </div>
+
+                <AboutWorkflowClient steps={about.workflowSteps} workflowLabel={about.workflowLabel} />
               </div>
             </div>
 
             <div className="md:col-span-7">
               <div className="rounded-3xl border border-foreground/10 bg-foreground/2 p-5 sm:p-6">
-                <EditableTextarea
+                <AboutDescriptionClient
                   path="about.description"
                   value={about.description}
-                  rows={8}
+                  readMoreText={about.readMoreText}
+                  readLessText={about.readLessText}
                   className="max-w-none text-sm text-foreground/75 sm:text-base md:text-[17px] md:leading-8"
                 />
               </div>

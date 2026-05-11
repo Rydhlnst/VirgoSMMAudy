@@ -1,0 +1,121 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Users\LENOVO\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.7.0
+2 info using node@v22.13.1
+3 silly config load:file:C:\Users\LENOVO\AppData\Roaming\npm\node_modules\npm\npmrc
+4 silly config load:file:D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy\.npmrc
+5 silly config load:file:C:\Users\LENOVO\.npmrc
+6 silly config load:file:C:\Users\LENOVO\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm exec pnpm@9.0.0 run check-types
+8 verbose argv "exec" "--yes" "--" "pnpm@9.0.0" "run" "check-types"
+9 verbose logfile logs-max:10 dir:D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy\.npm-cache\_logs\2026-05-11T14_29_24_347Z-
+10 verbose logfile D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy\.npm-cache\_logs\2026-05-11T14_29_24_347Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+14 http fetch GET 200 https://registry.npmjs.org/pnpm 11410ms (cache revalidated)
+15 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+16 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+17 silly idealTree buildDeps
+18 silly fetch manifest pnpm@9.0.0
+19 silly packumentCache full:https://registry.npmjs.org/pnpm cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/pnpm 124ms (cache revalidated)
+21 silly packumentCache full:https://registry.npmjs.org/pnpm set size:5371855 disposed:false
+22 silly placeDep ROOT pnpm@9.0.0 OK for:  want: 9.0.0
+23 silly reify moves {}
+24 silly audit bulk request { pnpm: [ '9.0.0' ] }
+25 http cache pnpm@https://registry.npmjs.org/pnpm/-/pnpm-9.0.0.tgz 0ms (cache hit)
+26 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 310ms
+27 silly audit report {
+27 silly audit report   pnpm: [
+27 silly audit report     {
+27 silly audit report       id: 1101099,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-vm32-9rqf-rh3r',
+27 silly audit report       title: 'pnpm no-script global cache poisoning via overrides / `ignore-scripts` evasion',
+27 silly audit report       severity: 'moderate',
+27 silly audit report       vulnerable_versions: '<9.15.0',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1104027,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-8cc4-rfj6-fhg4',
+27 silly audit report       title: 'pnpm uses the md5 path shortening function causes packet paths to coincide, which causes indirect packet overwriting',
+27 silly audit report       severity: 'moderate',
+27 silly audit report       vulnerable_versions: '<10.0.0',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1111961,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-7vhp-vf5g-r2fw',
+27 silly audit report       title: 'pnpm Has Lockfile Integrity Bypass that Allows Remote Dynamic Dependencies',
+27 silly audit report       severity: 'high',
+27 silly audit report       vulnerable_versions: '<10.26.0',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1112536,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-v253-rj99-jwpq',
+27 silly audit report       title: 'pnpm has Path Traversal via arbitrary file permission modification ',
+27 silly audit report       severity: 'moderate',
+27 silly audit report       vulnerable_versions: '<10.28.2',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1112639,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-6pfh-p556-v868',
+27 silly audit report       title: 'pnpm: Binary ZIP extraction allows arbitrary file write via path traversal (Zip Slip)',
+27 silly audit report       severity: 'moderate',
+27 silly audit report       vulnerable_versions: '<10.28.1',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1112679,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-6x96-7vc8-cm3p',
+27 silly audit report       title: 'pnpm has Windows-specific tarball Path Traversal',
+27 silly audit report       severity: 'moderate',
+27 silly audit report       vulnerable_versions: '<10.28.1',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1112680,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-xpqm-wm3m-f34h',
+27 silly audit report       title: 'pnpm scoped bin name Path Traversal allows arbitrary file creation outside node_modules/.bin',
+27 silly audit report       severity: 'moderate',
+27 silly audit report       vulnerable_versions: '<10.28.1',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1112681,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-m733-5w8f-5ggw',
+27 silly audit report       title: 'pnpm has symlink traversal in file:/git dependencies',
+27 silly audit report       severity: 'moderate',
+27 silly audit report       vulnerable_versions: '<10.28.2',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     },
+27 silly audit report     {
+27 silly audit report       id: 1117386,
+27 silly audit report       url: 'https://github.com/advisories/GHSA-2phv-j68v-wwqx',
+27 silly audit report       title: 'pnpm vulnerable to Command Injection via environment variable substitution',
+27 silly audit report       severity: 'high',
+27 silly audit report       vulnerable_versions: '>=6.25.0 <10.27.0',
+27 silly audit report       cwe: [Array],
+27 silly audit report       cvss: [Object]
+27 silly audit report     }
+27 silly audit report   ]
+27 silly audit report }
+28 silly packumentCache corgi:https://registry.npmjs.org/pnpm cache-miss
+29 http cache https://registry.npmjs.org/pnpm 18ms (cache hit)
+30 silly packumentCache corgi:https://registry.npmjs.org/pnpm set size:1776804 disposed:false
+31 verbose cwd D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy
+32 verbose os Windows_NT 10.0.26200
+33 verbose node v22.13.1
+34 verbose npm  v11.7.0
+35 verbose exit 1
+36 verbose code 1

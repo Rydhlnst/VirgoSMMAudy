@@ -1,0 +1,52 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.2
+2 info using node@v22.13.1
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy\.npmrc
+5 silly config load:file:C:\Users\LENOVO\.npmrc
+6 silly config load:file:C:\Users\LENOVO\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm exec pnpm@10.0.0 add react-easy-crop@latest
+8 verbose argv "exec" "--yes" "--" "pnpm@10.0.0" "add" "react-easy-crop@latest"
+9 verbose logfile logs-max:10 dir:D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy\.npm-cache\_logs\2026-05-11T15_20_39_544Z-
+10 verbose logfile D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy\.npm-cache\_logs\2026-05-11T15_20_39_544Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+14 http fetch GET https://registry.npmjs.org/pnpm attempt 1 failed with EACCES
+15 http fetch GET https://registry.npmjs.org/pnpm attempt 2 failed with EACCES
+16 http fetch GET https://registry.npmjs.org/pnpm attempt 3 failed with EACCES
+17 http fetch GET 200 https://registry.npmjs.org/pnpm 81255ms (cache stale)
+18 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+19 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+20 silly idealTree buildDeps
+21 silly fetch manifest pnpm@10.0.0
+22 silly packumentCache full:https://registry.npmjs.org/pnpm cache-miss
+23 http fetch GET https://registry.npmjs.org/pnpm attempt 1 failed with EACCES
+24 http fetch GET https://registry.npmjs.org/pnpm attempt 2 failed with EACCES
+25 http fetch GET https://registry.npmjs.org/pnpm attempt 3 failed with EACCES
+26 http fetch GET 200 https://registry.npmjs.org/pnpm 70145ms (cache stale)
+27 silly packumentCache full:https://registry.npmjs.org/pnpm set size:5371855 disposed:false
+28 silly placeDep ROOT pnpm@10.0.0 OK for:  want: 10.0.0
+29 silly reify moves {}
+30 silly audit bulk request { pnpm: [ '10.0.0' ] }
+31 http cache pnpm@https://registry.npmjs.org/pnpm/-/pnpm-10.0.0.tgz 0ms (cache hit)
+32 silly audit bulk request failed undefined
+33 verbose audit error FetchError: request to https://registry.npmjs.org/-/npm/v1/security/audits/quick failed, reason: 
+33 verbose audit error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+33 verbose audit error     at ClientRequest.emit (node:events:524:28)
+33 verbose audit error     at emitErrorEvent (node:_http_client:104:11)
+33 verbose audit error     at _destroy (node:_http_client:898:9)
+33 verbose audit error     at onSocketNT (node:_http_client:918:5)
+33 verbose audit error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+33 verbose audit error   code: 'EACCES',
+33 verbose audit error   errno: 'EACCES',
+33 verbose audit error   type: 'system'
+33 verbose audit error }
+34 silly audit error undefined
+35 silly audit report null
+36 verbose cwd D:\Projects\Freelance\Audy-LP-16\landingpage_cms-audy
+37 verbose os Windows_NT 10.0.26200
+38 verbose node v22.13.1
+39 verbose npm  v10.9.2
+40 verbose exit 1
+41 verbose code 1

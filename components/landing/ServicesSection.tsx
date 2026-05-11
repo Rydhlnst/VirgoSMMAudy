@@ -29,7 +29,7 @@ export function ServicesSection({ services }: { services: LandingPageContent["se
             ) : null}
             <Button asChild variant="accent" className="h-11 px-6">
               <Link href={services.viewAllLink}>
-                <EditableText path="services.viewAllText" value={services.viewAllText || "Lihat semua layanan"} />
+                <EditableText path="services.viewAllText" value={services.viewAllText || "View all services"} />
               </Link>
             </Button>
           </div>

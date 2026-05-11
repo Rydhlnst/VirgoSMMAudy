@@ -2,6 +2,9 @@
 import { z } from "zod";
 
 const urlOrEmpty = z.string().url("URL tidak valid").or(z.literal("")).default("");
+const imageSrcOrEmpty = z
+  .union([z.string().url("URL tidak valid"), z.string().regex(/^\/.+/, "Path gambar harus diawali '/'"), z.literal("")])
+  .default("");
 
 export const navbarSchema = z.object({
   brandName: z.string().min(1, "Brand name wajib diisi").default("Audy"),
@@ -26,7 +29,7 @@ export const heroSchema = z.object({
   title: z.string().min(1, "Hero title wajib diisi"),
   badge: z.string().default("SOCIAL MEDIA MANAGER"),
   description: z.string().default(""),
-  imageUrl: urlOrEmpty,
+  imageUrl: imageSrcOrEmpty,
   ctaText: z.string().min(1, "CTA text wajib diisi").default("Book a Call"),
   ctaLink: z.string().min(1, "CTA link wajib diisi").default("/contact"),
   tags: z.array(z.string().min(1)).default([]),
@@ -37,7 +40,7 @@ export const brandStripSchema = z.object({
     .array(
       z.object({
         name: z.string().min(1, "Nama brand wajib diisi"),
-        imageUrl: urlOrEmpty.optional(),
+        imageUrl: imageSrcOrEmpty.optional(),
         link: z.string().url("Link tidak valid").or(z.literal("")).optional(),
       }),
     )
@@ -47,7 +50,7 @@ export const brandStripSchema = z.object({
 export const introductionSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("MY INTRODUCTION"),
   description: z.string().min(1, "Description wajib diisi"),
-  imageUrl: urlOrEmpty,
+  imageUrl: imageSrcOrEmpty,
   badgeText: z.string().default(""),
 });
 
@@ -55,6 +58,22 @@ export const aboutSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("ABOUT ME"),
   label: z.string().min(1, "Label wajib diisi").default("Who I am?"),
   description: z.string().min(1, "Description wajib diisi"),
+  readMoreText: z.string().min(1).default("Read more"),
+  readLessText: z.string().min(1).default("Close"),
+  workflowLabel: z.string().min(1).default("WHAT WE DO"),
+  workflowSteps: z
+    .array(
+      z.object({
+        title: z.string().min(1, "Title wajib diisi"),
+        description: z.string().default(""),
+      }),
+    )
+    .default([
+      { title: "Discover", description: "Clarify goals, audience, and offer." },
+      { title: "Plan", description: "Build the system: content pillars + calendar." },
+      { title: "Create", description: "Design, write, and produce on-brand assets." },
+      { title: "Optimize", description: "Review results and iterate weekly." },
+    ]),
 });
 
 export const portfolioSchema = z.object({
@@ -68,7 +87,7 @@ export const portfolioSchema = z.object({
       z.object({
         type: z.enum(["video", "photo"]),
         title: z.string().min(1, "Title wajib diisi"),
-        thumbnailUrl: urlOrEmpty,
+        thumbnailUrl: imageSrcOrEmpty,
         link: z.string().url("Link tidak valid").or(z.literal("")).optional(),
         caption: z.string().optional(),
       }),
@@ -94,7 +113,7 @@ export const servicesSchema = z.object({
         hoursPerWeek: z.string().default(""),
         includes: z.array(z.string().min(1)).default([]),
         idealFor: z.string().default(""),
-        imageUrl: urlOrEmpty,
+        imageUrl: imageSrcOrEmpty,
         buttonText: z.string().min(1, "Button text wajib diisi").default("Get Started"),
         buttonLink: z.string().min(1, "Button link wajib diisi").default("/contact"),
         isHighlighted: z.boolean().default(false),
@@ -112,7 +131,7 @@ export const supportDetailSchema = z.object({
   slug: slugSchema,
   title: z.string().min(1, "Title wajib diisi"),
   description: z.string().default(""),
-  heroImageUrl: urlOrEmpty.optional(),
+  heroImageUrl: imageSrcOrEmpty.optional(),
   bullets: z.array(z.string().min(1)).default([]),
 });
 
@@ -136,8 +155,8 @@ export const testimonialsSchema = z.object({
         quote: z.string().min(1, "Quote wajib diisi"),
         workTitle: z.string().default(""),
         description: z.string().default(""),
-        workImageUrl: urlOrEmpty.optional(),
-        imageUrl: urlOrEmpty.optional(),
+        workImageUrl: imageSrcOrEmpty.optional(),
+        imageUrl: imageSrcOrEmpty.optional(),
       }),
     )
     .default([]),
@@ -146,8 +165,8 @@ export const testimonialsSchema = z.object({
 export const brandingSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("BRANDING"),
   description: z.string().default(""),
-  beforeImageUrl: urlOrEmpty,
-  afterImageUrl: urlOrEmpty,
+  beforeImageUrl: imageSrcOrEmpty,
+  afterImageUrl: imageSrcOrEmpty,
   beforeLabel: z.string().min(1, "Before label wajib diisi").default("From This"),
   afterLabel: z.string().min(1, "After label wajib diisi").default("To This"),
 });
@@ -247,7 +266,7 @@ export const pagesSchema = z
               name: z.string().min(1).default("Team Member"),
               role: z.string().min(1).default("Support Specialist"),
               bio: z.string().default(""),
-              imageUrl: urlOrEmpty,
+              imageUrl: imageSrcOrEmpty,
             }),
           )
           .default([]),

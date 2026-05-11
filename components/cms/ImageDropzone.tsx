@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useUploadThing } from "@/lib/uploadthing";
+import { uploadFiles } from "@/lib/uploadthing";
 
 export function ImageDropzone({
   onUploadedUrl,
@@ -13,15 +13,21 @@ export function ImageDropzone({
   className?: string;
 }) {
   const inputRef = React.useRef<HTMLInputElement | null>(null);
-  const { startUpload, isUploading } = useUploadThing("imageUploader", {
-    onClientUploadComplete: (res) => {
-      const url = res?.[0]?.url;
-      if (url) onUploadedUrl(url);
-    },
-  });
+  const [isUploading, setIsUploading] = React.useState(false);
 
   const [isDragOver, setIsDragOver] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  async function uploadFile(file: File) {
+    const res = await uploadFiles("imageUploader", { files: [file] });
+    const first = res[0];
+    const url =
+      (first as { serverData?: { url?: string } } | undefined)?.serverData?.url ??
+      (first as { ufsUrl?: string } | undefined)?.ufsUrl;
+    if (!url) throw new Error("Upload failed (missing uploaded url).");
+
+    onUploadedUrl(url);
+  }
 
   async function handleFiles(files: FileList | null) {
     setError(null);
@@ -32,9 +38,12 @@ export function ImageDropzone({
       return;
     }
     try {
-      await startUpload([file]);
+      setIsUploading(true);
+      await uploadFile(file);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed.");
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -79,4 +88,3 @@ export function ImageDropzone({
     </div>
   );
 }
-

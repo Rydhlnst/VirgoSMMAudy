@@ -1,13 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ImagePlus, Loader2, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
+import { uploadFiles } from "@/lib/uploadthing";
 import { useFormContext, useWatch } from "react-hook-form";
 
 export function ImageUrlInput({
@@ -27,30 +27,34 @@ export function ImageUrlInput({
   const { register, setValue } = useFormContext();
 
   const value = useWatch({ name }) as string | undefined;
-  const { startUpload, isUploading } = useUploadThing("imageUploader", {
-    onUploadError(error) {
-      toast.error(error.message || "Image upload failed.");
-    },
-  });
+  const [uploading, setUploading] = useState(false);
 
   async function handleUpload(file: File) {
-    const result = await startUpload([file]);
-    const uploaded = result?.[0];
-    const uploadedUrl = uploaded?.serverData?.url ?? uploaded?.url ?? "";
-    if (!uploadedUrl) {
-      toast.error("Upload complete, but URL not found.");
-      return;
-    }
+    try {
+      setUploading(true);
+      const res = await uploadFiles("imageUploader", { files: [file] });
+      const first = res[0];
+      const url =
+        (first as { serverData?: { url?: string } } | undefined)?.serverData?.url ??
+        (first as { ufsUrl?: string } | undefined)?.ufsUrl;
+      if (!url) {
+        throw new Error("Image upload failed (missing uploaded url).");
+      }
 
-    setValue(name, uploadedUrl, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
-    toast.success("Image uploaded.");
+      setValue(name, url, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+      toast.success("Image uploaded.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Image upload failed.");
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={name}>{label}</Label>
       <div className="grid gap-2">
-        <Input id={name} placeholder="https://..." {...register(name)} />
+        <Input id={name} placeholder="/uploads/..." {...register(name)} />
         <div className="flex flex-wrap items-center gap-2">
           <input
             ref={fileInputRef}
@@ -69,10 +73,10 @@ export function ImageUrlInput({
             variant="outline"
             size="sm"
             onClick={() => fileInputRef.current?.click()}
-            disabled={isUploading}
+            disabled={uploading}
           >
-            {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-            <span>{isUploading ? "Uploading..." : "Upload Image"}</span>
+            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            <span>{uploading ? "Uploading..." : "Upload Image"}</span>
           </Button>
           <Button
             type="button"

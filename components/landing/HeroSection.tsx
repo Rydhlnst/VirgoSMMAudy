@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import { Heart } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { MarkdownContent } from "@/components/landing/MarkdownContent";
+import { EditableImage } from "@/components/cms/EditableImage";
+import { EditableText } from "@/components/cms/EditableText";
+import { EditableTextarea } from "@/components/cms/EditableTextarea";
 
 export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
   const tags = hero.tags.filter(Boolean);
@@ -15,46 +16,54 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
       <div className="mx-auto grid max-w-7xl items-stretch gap-8 px-6 py-10 md:py-14 lg:grid-cols-12 lg:gap-10">
         <div className="order-2 lg:order-1 lg:col-span-7">
           <div className="flex h-full flex-col">
-            <h1
+            <EditableText
+              as="h1"
+              path="hero.title"
+              value={hero.title}
               className="hero-name text-center text-[52px] sm:text-[80px] lg:text-left lg:text-[92px]"
-              style={{ whiteSpace: "pre-line" }}
-            >
-              {hero.title}
-            </h1>
+            />
 
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3 pb-4 pt-8 lg:justify-start">
-              <div className="inline-flex rounded-full bg-accent px-5 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-[color:var(--accent-foreground)]">
-                {hero.badge}
-              </div>
+              <EditableText
+                as="div"
+                path="hero.badge"
+                value={hero.badge}
+                className="inline-flex rounded-full bg-accent px-5 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-[color:var(--accent-foreground)]"
+              />
               {extraTags.length ? (
                 <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)]">
-                  {extraTags.join("  •  ")}
+                  {extraTags.map((tag, idx) => (
+                    <EditableText key={tag} as="span" path={`hero.tags.${idx + 3}`} value={tag} className="mr-2" />
+                  ))}
                 </div>
               ) : null}
             </div>
 
-            {hero.description ? (
-              <MarkdownContent
-                content={hero.description}
-                className="mt-6 max-w-xl text-center text-base text-[color:var(--muted-foreground)] sm:text-lg lg:text-left"
-              />
-            ) : null}
+            <EditableTextarea
+              path="hero.description"
+              value={hero.description}
+              rows={4}
+              className="mt-6 max-w-xl text-center text-base text-[color:var(--muted-foreground)] sm:text-lg lg:text-left"
+            />
 
             <div className="mt-auto pt-10">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex flex-wrap items-center justify-center gap-6 lg:justify-start">
-                  {primaryTags.map((t) => (
-                    <div
+                  {primaryTags.map((t, idx) => (
+                    <EditableText
                       key={t}
+                      as="div"
+                      path={`hero.tags.${idx}`}
+                      value={t}
                       className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weaker)]"
-                    >
-                      {t}
-                    </div>
+                    />
                   ))}
                 </div>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
                   <Button asChild variant="accent" size="lg" className="h-12 px-8">
-                    <Link href={hero.ctaLink}>{hero.ctaText}</Link>
+                    <Link href={hero.ctaLink}>
+                      <EditableText path="hero.ctaText" value={hero.ctaText} />
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -73,7 +82,12 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
             </button>
 
             <div className="relative overflow-hidden rounded-4xl">
-              <Skeleton className="aspect-4/3 w-full h-full rounded-4xl" />
+              <EditableImage
+                path="hero.imageUrl"
+                src={hero.imageUrl}
+                alt={hero.title}
+                imgClassName="aspect-4/3 w-full h-full rounded-4xl"
+              />
             </div>
           </div>
         </div>

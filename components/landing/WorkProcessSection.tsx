@@ -1,18 +1,23 @@
 import { Badge } from "@/components/ui/badge";
 import type { LandingPageContent } from "@/lib/landing-content/types";
-import { SectionHeading } from "./SectionHeading";
-import { Skeleton } from "@/components/ui/skeleton";
-import { MarkdownContent } from "@/components/landing/MarkdownContent";
+import { EditableImage } from "@/components/cms/EditableImage";
+import { EditableText } from "@/components/cms/EditableText";
+import { EditableTextarea } from "@/components/cms/EditableTextarea";
 
 export function WorkProcessSection({ workProcess }: { workProcess: LandingPageContent["workProcess"] }) {
   return (
     <section className="bg-(--surface) py-14 text-(--surface-foreground) md:py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <SectionHeading
-          title={workProcess.title}
-          description="A flexible process designed to support your business smoothly."
-          kicker="PROCESS"
-        />
+        <div className="text-left">
+          <EditableText
+            as="div"
+            path="workProcess.kicker"
+            value={workProcess.kicker}
+            className="mb-3 inline-flex rounded-full bg-accent px-4 py-1 text-xs font-black tracking-[0.22em] text-accent-foreground"
+          />
+          <EditableText as="h2" path="workProcess.title" value={workProcess.title} className="hero-name text-[52px] sm:text-[64px] md:text-[84px]" />
+          <EditableTextarea path="workProcess.description" value={workProcess.description} className="mt-3 max-w-2xl text-base text-(--muted-foreground)" rows={3} />
+        </div>
 
         <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {workProcess.steps.map((s, idx) => (
@@ -21,23 +26,32 @@ export function WorkProcessSection({ workProcess }: { workProcess: LandingPageCo
               className="flex flex-col items-center text-center"
             >
               <div className="relative size-32 overflow-hidden rounded-[28px] bg-(--overlay-1)">
-                <Skeleton className="absolute inset-0 h-full w-full rounded-[28px] bg-foreground/10" />
+                <EditableImage
+                  path={`workProcess.steps.${idx}.icon`}
+                  src={s.icon}
+                  alt={s.title}
+                  className="absolute inset-0"
+                  imgClassName="absolute inset-0 h-full w-full rounded-[28px] object-cover"
+                />
                 <div className="absolute inset-0 bg-(--overlay-3)" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-4xl font-black tracking-tight text-(--surface-inverse-foreground) drop-shadow-sm">
-                    {s.number}
-                  </div>
+                  <EditableText
+                    as="div"
+                    path={`workProcess.steps.${idx}.number`}
+                    value={s.number}
+                    className="text-4xl font-black tracking-tight text-(--surface-inverse-foreground) drop-shadow-sm"
+                  />
                 </div>
               </div>
 
-              <div className="mt-5 text-base font-black">{s.title}</div>
+              <EditableText as="div" path={`workProcess.steps.${idx}.title`} value={s.title} className="mt-5 text-base font-black" />
               {s.description ? (
-                <MarkdownContent content={s.description} className="mt-2 text-sm text-[color:var(--muted-foreground)]" />
+                <EditableTextarea path={`workProcess.steps.${idx}.description`} value={s.description} className="mt-2 text-sm text-[color:var(--muted-foreground)]" rows={3} />
               ) : null}
 
               <div className="mt-4">
                 <Badge variant="accent" className="w-fit">
-                  Step
+                  <EditableText path="workProcess.stepLabel" value={workProcess.stepLabel} />
                 </Badge>
               </div>
             </div>
@@ -47,3 +61,4 @@ export function WorkProcessSection({ workProcess }: { workProcess: LandingPageCo
     </section>
   );
 }
+

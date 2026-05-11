@@ -5,6 +5,8 @@ import { mapLandingContentRowToContent } from "@/lib/landing-content/landing-con
 import type { LandingContentSection } from "@/lib/landing-content/landing-content.validation";
 import type { LandingPageContent } from "@/lib/landing-content/types";
 
+const LEGACY_PORTFOLIO_DETAILS: { projects: unknown[] } = { projects: [] };
+
 export async function getLandingPageContent(siteKey: string) {
   const db = getDb();
   const [row] = await db.select().from(landingPageContent).where(eq(landingPageContent.siteKey, siteKey)).limit(1);
@@ -18,6 +20,7 @@ export async function createLandingPageContent(siteKey: string, data: LandingPag
     .values({
       siteKey,
       ...data,
+      portfolioDetails: LEGACY_PORTFOLIO_DETAILS,
     })
     .returning();
 
@@ -45,6 +48,7 @@ export async function upsertLandingPageContent(siteKey: string, data: LandingPag
     .values({
       siteKey,
       ...data,
+      portfolioDetails: LEGACY_PORTFOLIO_DETAILS,
     })
     .onConflictDoUpdate({
       target: landingPageContent.siteKey,

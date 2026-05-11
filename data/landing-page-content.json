@@ -1,4 +1,4 @@
-﻿{
+{
     "navbar":  {
                    "brandName":  "Virgo Social",
                    "menu":  [
@@ -250,7 +250,7 @@
                                                                    "Instagram support",
                                                                    "TikTok support",
                                                                    "Facebook page management",
-                                                                   "LinkedIn content support"
+                                                                   "Facebook content support"
                                                                ]
                                                }
                                            ],
@@ -376,8 +376,8 @@
     "contact":  {
                     "title":  "LET\u0027S BUILD YOUR NEXT 30 DAYS OF CONTENT",
                     "description":  "Tell me what you sell and your goal. I\u0027ll reply with a simple plan.",
-                    "whatsappText":  "Chat on WhatsApp",
-                    "whatsappLink":  "https://wa.me/",
+                    "emailText":  "Send email",
+                    "emailLink":  "mailto:",
                     "email":  "",
                     "socialLinks":  [
                                         {

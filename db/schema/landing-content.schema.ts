@@ -10,7 +10,8 @@ export const landingPageContent = pgTable("landing_page_content", {
   introduction: jsonb("introduction").$type<LandingPageContent["introduction"]>().notNull(),
   about: jsonb("about").$type<LandingPageContent["about"]>().notNull(),
   portfolio: jsonb("portfolio").$type<LandingPageContent["portfolio"]>().notNull(),
-  portfolioDetails: jsonb("portfolio_details").$type<LandingPageContent["portfolioDetails"]>().notNull(),
+  // Legacy column kept for backwards DB compatibility.
+  portfolioDetails: jsonb("portfolio_details").$type<{ projects: unknown[] }>().notNull(),
   services: jsonb("services").$type<LandingPageContent["services"]>().notNull(),
   servicesDetails: jsonb("services_details").$type<LandingPageContent["servicesDetails"]>().notNull(),
   testimonials: jsonb("testimonials").$type<LandingPageContent["testimonials"]>().notNull(),

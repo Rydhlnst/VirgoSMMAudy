@@ -9,9 +9,121 @@ import { ImageUrlInput } from "../ImageUrlInput";
 import { useCrudToast } from "../useCrudToast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-export function ServicesCMSForm() {
+function ServiceCardItem({
+  idx,
+  removeItem,
+}: {
+  idx: number;
+  removeItem: (index: number) => void;
+}) {
   const crudToast = useCrudToast();
   const { control, watch, setValue } = useFormContext();
+  const includes = useFieldArray({ control, name: `services.items.${idx}.includes` as const });
+  const highlighted = Boolean(watch(`services.items.${idx}.isHighlighted`));
+
+  return (
+    <div className="grid gap-4 rounded-3xl border border-[color:var(--border)]/15 p-4">
+      <div className="grid gap-4 md:grid-cols-2">
+        <TextField name={`services.items.${idx}.title`} label="Card Title (optional)" placeholder="Custom" />
+        <TextField name={`services.items.${idx}.name`} label="Name" placeholder="Service name" />
+      </div>
+      <TextField name={`services.items.${idx}.price`} label="Price (IDR)" placeholder="IDR 2.500.000" />
+      <TextField
+        name={`services.items.${idx}.hoursPerWeek`}
+        label="Hours Per Week (optional)"
+        placeholder="10 hours per week"
+      />
+      <MarkdownField name={`services.items.${idx}.description`} label="Description (Markdown)" />
+      <ImageUrlInput name={`services.items.${idx}.imageUrl`} label="Image URL" />
+      <div className="grid gap-4 md:grid-cols-2">
+        <TextField name={`services.items.${idx}.buttonText`} label="Button Text" placeholder="Get This" />
+        <TextField name={`services.items.${idx}.buttonLink`} label="Button Link" placeholder="#contact" />
+      </div>
+
+      <TextAreaField
+        name={`services.items.${idx}.idealFor`}
+        label="Ideal For (optional)"
+        placeholder="Small businesses, solo entrepreneurs, creators."
+        rows={2}
+      />
+
+      <div className="grid gap-3 rounded-3xl border border-[color:var(--border)]/15 p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-sm font-semibold">Includes</div>
+            <div className="text-xs text-[color:var(--muted-foreground-weak)]">Bullet list shown on the card.</div>
+          </div>
+          <Button
+            type="button"
+            variant="accent"
+            size="sm"
+            onClick={() => {
+              includes.append("New bullet");
+              crudToast.created("Service bullet");
+            }}
+          >
+            Add Bullet
+          </Button>
+        </div>
+        <div className="grid gap-3">
+          {includes.fields.map((b, bIdx) => (
+            <div
+              key={b.id}
+              className="grid gap-3 rounded-3xl border border-[color:var(--border)]/15 p-4 md:grid-cols-12"
+            >
+              <div className="md:col-span-10">
+                <TextField
+                  name={`services.items.${idx}.includes.${bIdx}`}
+                  label={`Bullet ${bIdx + 1}`}
+                  placeholder="Administrative support"
+                />
+              </div>
+              <div className="md:col-span-2 md:flex md:items-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    includes.remove(bIdx);
+                    crudToast.deleted("Service bullet");
+                  }}
+                >
+                  Remove
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center justify-between rounded-3xl border border-[color:var(--border)]/15 p-4">
+        <div>
+          <div className="text-sm font-semibold">Highlight Card</div>
+          <div className="text-xs text-[color:var(--muted-foreground-weak)]">Makes it appear as the main offer.</div>
+        </div>
+        <Switch
+          checked={highlighted}
+          onCheckedChange={(v) => setValue(`services.items.${idx}.isHighlighted`, v, { shouldDirty: true })}
+        />
+      </div>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            removeItem(idx);
+            crudToast.deleted("Service package");
+          }}
+        >
+          Remove
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export function ServicesCMSForm() {
+  const crudToast = useCrudToast();
+  const { control } = useFormContext();
   const items = useFieldArray({ control, name: "services.items" as const });
 
   return (
@@ -23,6 +135,11 @@ export function ServicesCMSForm() {
         <div className="grid gap-4 md:grid-cols-2">
           <TextField name="services.title" label="Title" placeholder="SERVICES & PRICELIST" />
           <TextField name="services.subtitle" label="Subtitle" placeholder="Short subtitle..." />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <TextField name="services.carouselHintText" label="Carousel Hint" placeholder="Swipe / Scroll" />
+          <TextField name="services.idealForLabel" label="Ideal For Label" placeholder="Ideal for" />
         </div>
 
         <div className="flex items-center justify-between">
@@ -54,108 +171,9 @@ export function ServicesCMSForm() {
         <Separator />
 
         <div className="grid gap-4">
-          {items.fields.map((f, idx) => {
-            const highlighted = Boolean(watch(`services.items.${idx}.isHighlighted`));
-            const includes = useFieldArray({ control, name: `services.items.${idx}.includes` as const });
-            return (
-              <div key={f.id} className="grid gap-4 rounded-3xl border border-[color:var(--border)]/15 p-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <TextField name={`services.items.${idx}.title`} label="Card Title (optional)" placeholder="Custom" />
-                  <TextField name={`services.items.${idx}.name`} label="Name" placeholder="Service name" />
-                </div>
-                <TextField name={`services.items.${idx}.price`} label="Price (IDR)" placeholder="IDR 2.500.000" />
-                <TextField
-                  name={`services.items.${idx}.hoursPerWeek`}
-                  label="Hours Per Week (optional)"
-                  placeholder="10 hours per week"
-                />
-                <MarkdownField name={`services.items.${idx}.description`} label="Description (Markdown)" />
-                <ImageUrlInput name={`services.items.${idx}.imageUrl`} label="Image URL" />
-                <div className="grid gap-4 md:grid-cols-2">
-                  <TextField name={`services.items.${idx}.buttonText`} label="Button Text" placeholder="Get This" />
-                  <TextField name={`services.items.${idx}.buttonLink`} label="Button Link" placeholder="#contact" />
-                </div>
-
-                <TextAreaField
-                  name={`services.items.${idx}.idealFor`}
-                  label="Ideal For (optional)"
-                  placeholder="Small businesses, solo entrepreneurs, creators."
-                  rows={2}
-                />
-
-                <div className="grid gap-3 rounded-3xl border border-[color:var(--border)]/15 p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-semibold">Includes</div>
-                      <div className="text-xs text-[color:var(--muted-foreground-weak)]">Bullet list shown on the card.</div>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="accent"
-                      size="sm"
-                      onClick={() => {
-                        includes.append("New bullet");
-                        crudToast.created("Service bullet");
-                      }}
-                    >
-                      Add Bullet
-                    </Button>
-                  </div>
-                  <div className="grid gap-3">
-                    {includes.fields.map((b, bIdx) => (
-                      <div
-                        key={b.id}
-                        className="grid gap-3 rounded-3xl border border-[color:var(--border)]/15 p-4 md:grid-cols-12"
-                      >
-                        <div className="md:col-span-10">
-                          <TextField
-                            name={`services.items.${idx}.includes.${bIdx}`}
-                            label={`Bullet ${bIdx + 1}`}
-                            placeholder="Administrative support"
-                          />
-                        </div>
-                        <div className="md:col-span-2 md:flex md:items-end">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="w-full"
-                            onClick={() => {
-                              includes.remove(bIdx);
-                              crudToast.deleted("Service bullet");
-                            }}
-                          >
-                            Remove
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between rounded-3xl border border-[color:var(--border)]/15 p-4">
-                  <div>
-                    <div className="text-sm font-semibold">Highlight Card</div>
-                    <div className="text-xs text-[color:var(--muted-foreground-weak)]">Makes it appear as the main offer.</div>
-                  </div>
-                  <Switch
-                    checked={highlighted}
-                    onCheckedChange={(v) => setValue(`services.items.${idx}.isHighlighted`, v, { shouldDirty: true })}
-                  />
-                </div>
-                <div className="flex justify-end">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      items.remove(idx);
-                      crudToast.deleted("Service package");
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
+          {items.fields.map((f, idx) => (
+            <ServiceCardItem key={f.id} idx={idx} removeItem={items.remove} />
+          ))}
         </div>
       </CardContent>
     </Card>

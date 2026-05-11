@@ -21,8 +21,8 @@ export function ContactCMSForm() {
         <TextField name="contact.title" label="CTA Title" />
         <MarkdownField name="contact.description" label="Description (Markdown)" />
         <div className="grid gap-4 md:grid-cols-2">
-          <TextField name="contact.whatsappText" label="WhatsApp Button Text" />
-          <TextField name="contact.whatsappLink" label="WhatsApp Link" placeholder="https://wa.me/628..." />
+          <TextField name="contact.emailText" label="Email Button Text" />
+          <TextField name="contact.emailLink" label="Email Link" placeholder="mailto:hello@domain.com" />
         </div>
         <TextField name="contact.email" label="Email (optional)" placeholder="hello@domain.com" />
 

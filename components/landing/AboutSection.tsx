@@ -1,59 +1,43 @@
 import type { LandingPageContent } from "@/lib/landing-content/types";
-import Image from "next/image";
-import { MarkdownContent } from "@/components/landing/MarkdownContent";
-
-function NotchedO({ className }: { className?: string }) {
-  return (
-    <span className={"relative inline-block " + (className ?? "")}>
-      O
-      {/* Cut-out notch to mimic the reference style */}
-      <span className="pointer-events-none absolute left-1/2 top-[55%] h-[0.55em] w-[0.55em] -translate-x-1/2 -translate-y-1/2 rotate-[-18deg] rounded-full bg-background" />
-    </span>
-  );
-}
-
-function AboutDisplayTitle({ title }: { title: string }) {
-  const upper = title.toUpperCase();
-  // Render like: AB( O-notched )UT ME when possible
-  const parts = upper.split("O");
-  if (parts.length < 2) {
-    return <h2 className="hero-name text-[64px] sm:text-[84px] md:text-[108px]">{upper}</h2>;
-  }
-
-  return (
-    <h2 className="hero-name text-[64px] sm:text-[84px] md:text-[108px]">
-      {parts[0]}
-      <NotchedO />
-      {parts.slice(1).join("O")}
-    </h2>
-  );
-}
+import { EditableImage } from "@/components/cms/EditableImage";
+import { EditableText } from "@/components/cms/EditableText";
+import { EditableTextarea } from "@/components/cms/EditableTextarea";
 
 export function AboutSection({ about }: { about: LandingPageContent["about"] }) {
   return (
     <section id="about" className="py-14 md:py-20">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-10">
-          <AboutDisplayTitle title={about.title} />
+          <EditableText
+            as="h2"
+            path="about.title"
+            value={about.title}
+            className="hero-name text-[64px] sm:text-[84px] md:text-[108px]"
+          />
 
           <div className="grid gap-8 md:grid-cols-12 md:items-start">
             <div className="md:col-span-5">
               <div className="inline-flex items-center gap-3">
                 <div className="relative">
-                  <div className="rounded-full border-none border-accent px-5 py-2 text-sm font-semibold italic text-foreground">
-                    {about.label}
-                  </div>
-                  <div className="pointer-events-none absolute -inset-2 -rotate-6 rounded-full border-none border-[color:var(--accent)]/70" />
-                  <div className="pointer-events-none absolute -inset-3 rotate-3 rounded-full border border-[color:var(--accent)]/40" />
+                  <EditableText
+                    as="div"
+                    path="about.label"
+                    value={about.label}
+                    className="rounded-full border-none border-accent px-5 py-2 text-sm font-semibold italic text-foreground"
+                  />
+                  <div className="pointer-events-none absolute -inset-2 -rotate-6 rounded-full border-none border-(--accent)/70" />
+                  <div className="pointer-events-none absolute -inset-3 rotate-3 rounded-full border border-(--accent)/40" />
                 </div>
               </div>
             </div>
 
             <div className="md:col-span-7">
-              <div className="rounded-3xl border border-foreground/10 bg-foreground/[0.02] p-5 sm:p-6">
-                <MarkdownContent
-                  content={about.description}
-                  className="max-w-none text-sm text-foreground/75 sm:text-base md:text-[17px] md:leading-8 md:columns-2 md:gap-8 [&_p]:break-inside-avoid-column"
+              <div className="rounded-3xl border border-foreground/10 bg-foreground/2 p-5 sm:p-6">
+                <EditableTextarea
+                  path="about.description"
+                  value={about.description}
+                  rows={8}
+                  className="max-w-none text-sm text-foreground/75 sm:text-base md:text-[17px] md:leading-8"
                 />
               </div>
               <div className="mt-6 h-0.5 w-16 bg-foreground/25" />
@@ -69,14 +53,19 @@ export function AboutSection({ about }: { about: LandingPageContent["about"] }) 
                   className={`overflow-hidden rounded-[28px] border-none border-foreground bg-background p-2 shadow-sm ${rotate}`}
                 >
                   <div className="relative overflow-hidden rounded-[20px]">
-                    <Image
-                      src={img.imageUrl || "https://placehold.co/1200x900?text=About"}
+                    <EditableImage
+                      path={`about.images.${idx}.imageUrl`}
+                      src={img.imageUrl}
                       alt={img.alt}
-                      width={1200}
-                      height={900}
-                      className="aspect-4/3 w-full object-cover"
+                      imgClassName="aspect-4/3 w-full object-cover"
                     />
                   </div>
+                  <EditableText
+                    as="div"
+                    path={`about.images.${idx}.alt`}
+                    value={img.alt}
+                    className="mt-2 text-xs text-foreground/70"
+                  />
                 </div>
               );
             })}

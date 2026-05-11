@@ -1,6 +1,7 @@
-import type { LandingPageContent } from "./types";
+﻿import type { LandingPageContent } from "./types";
+import { landingPageContentSchema } from "./schema";
 
-export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
+const RAW_DEFAULT_LANDING_PAGE_CONTENT = {
   navbar: {
     brandName: "Virgo Social Services",
     menu: [
@@ -18,8 +19,7 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
     title: "Virtual Assistance, Social Media, and Creative Support",
     description:
       "Virgo Social Services helps businesses stay organized, consistent, and supported through administrative assistance, creative support, social media help, and flexible digital services.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1520975958225-7cc45f0f53d5?auto=format&fit=crop&w=1400&q=80",
+    imageUrl: "",
     ctaText: "Book a Call",
     ctaLink: "/contact",
     tags: [
@@ -35,7 +35,7 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
       { name: "Founder-Led Brands", link: "" },
       { name: "Creators & Personal Brands", link: "" },
       { name: "E-Commerce Brands", link: "" },
-      { name: "Wellness Businesses", link: "" },
+      { name: "Service-Based Businesses", link: "" },
     ],
   },
 
@@ -43,8 +43,7 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
     title: "INTRODUCTION",
     description:
       "Virgo Social Services provides reliable virtual assistance for business owners who need support with daily operations, content tasks, customer communication, and digital organization.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80",
+    imageUrl: "",
     badgeText: "Available for support",
   },
 
@@ -55,18 +54,15 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
       "We help businesses save time and stay consistent by handling administrative tasks, inbox and calendar management, social media support, Canva designs, customer service, content planning, and workflow organization.",
     images: [
       {
-        imageUrl:
-          "https://images.unsplash.com/photo-1520975869018-84f4c535d2d3?auto=format&fit=crop&w=900&q=80",
+        imageUrl: "",
         alt: "Administrative support",
       },
       {
-        imageUrl:
-          "https://images.unsplash.com/photo-1520975744055-1f7e1f39a3d2?auto=format&fit=crop&w=900&q=80",
+        imageUrl: "",
         alt: "Content planning",
       },
       {
-        imageUrl:
-          "https://images.unsplash.com/photo-1520975682035-9f2d9965e5a2?auto=format&fit=crop&w=900&q=80",
+        imageUrl: "",
         alt: "Creative support",
       },
     ],
@@ -74,12 +70,15 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
 
   portfolio: {
     title: "PORTFOLIO",
+    videoLabel: "VIDEOFOLIO",
+    photoLabel: "PHOTOFOLIO",
+    emptyVideoText: "No video items yet.",
+    emptyPhotoText: "No photo items yet.",
     items: [
       {
         type: "photo",
         title: "Administrative Workflow Support",
-        thumbnailUrl:
-          "https://images.unsplash.com/photo-1520975868797-07dd1a3b2a6b?auto=format&fit=crop&w=1200&q=80",
+        thumbnailUrl: "",
         link: "",
         caption:
           "Inbox, calendar, files, and task organization for smoother business operations.",
@@ -87,8 +86,7 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
       {
         type: "photo",
         title: "Social Media Content Support",
-        thumbnailUrl:
-          "https://images.unsplash.com/photo-1520975779488-2b0b8b0e1c4a?auto=format&fit=crop&w=1200&q=80",
+        thumbnailUrl: "",
         link: "",
         caption:
           "Content scheduling, captions, Canva graphics, and platform support.",
@@ -96,8 +94,7 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
       {
         type: "photo",
         title: "Creative Business Assets",
-        thumbnailUrl:
-          "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=1200&q=80",
+        thumbnailUrl: "",
         link: "",
         caption:
           "Branded templates, marketing materials, and digital design support.",
@@ -170,94 +167,77 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
   services: {
     title: "SERVICES & PACKAGES",
     subtitle: "FLEXIBLE SUPPORT FOR YOUR BUSINESS",
+    carouselHintText: "Swipe / Scroll",
+    idealForLabel: "Ideal for",
     viewAllText: "View all services",
     viewAllLink: "/services",
     items: [
-      {
-        title: "Starter Support",
-        name: "10 Hours per Week",
-        description:
-          "Perfect for businesses needing light ongoing support with admin tasks, communication, scheduling, and basic social media assistance.",
-        price: "Custom pricing",
-        hoursPerWeek: "10 hrs/week",
-        includes: [
-          "Administrative tasks",
-          "Email management",
-          "Scheduling",
-          "Basic social media assistance",
-          "Canva support",
-          "Customer communication",
-        ],
-        idealFor: "Small businesses, solo entrepreneurs, and creators.",
-        imageUrl: "",
-        buttonText: "Book a Call",
-        buttonLink: "/contact",
-        isHighlighted: false,
-      },
-      {
-        title: "Growth Support",
-        name: "20 Hours per Week",
-        description:
-          "For businesses needing more consistent digital and operational support across admin, content, customer service, and reporting.",
-        price: "Custom pricing",
-        hoursPerWeek: "20 hrs/week",
-        includes: [
-          "Administrative support",
-          "Content scheduling",
-          "Social media assistance",
-          "Graphic design support",
-          "Customer support",
-          "Organization systems",
-          "Research & reporting",
-        ],
-        idealFor: "Growing brands and busy business owners.",
-        imageUrl: "",
-        buttonText: "Book a Call",
-        buttonLink: "/contact",
-        isHighlighted: true,
-      },
-      {
-        title: "Full Support",
-        name: "40 Hours per Week",
-        description:
-          "Comprehensive virtual assistance and digital support for businesses that need regular, hands-on help.",
-        price: "Custom pricing",
-        hoursPerWeek: "40 hrs/week",
-        includes: [
-          "Priority support",
-          "Ongoing admin management",
-          "Social media support",
-          "Creative assistance",
-          "Business organization",
-          "Workflow support",
-          "Flexible task management",
-        ],
-        idealFor: "Businesses needing regular, hands-on support.",
-        imageUrl: "",
-        buttonText: "Book a Call",
-        buttonLink: "/contact",
-        isHighlighted: false,
-      },
-      {
-        title: "Custom Support",
-        name: "Tailored Business Support",
-        description:
-          "Flexible support based on your business needs, project scope, preferred hours, and specialized task requests.",
-        price: "Let's talk",
-        hoursPerWeek: "Flexible hours",
-        includes: [
-          "Project-based work",
-          "Flexible hours",
-          "Specialized support",
-          "Mixed service requests",
-        ],
-        idealFor: "Businesses with unique or changing support needs.",
-        imageUrl: "",
-        buttonText: "Book a Call",
-        buttonLink: "/contact",
-        isHighlighted: false,
-      },
+  {
+    title: "Starter Support",
+    name: "10 HRS/WEEK",
+    description:
+      "Perfect for businesses needing light weekly support with admin, communication, and social media assistance.",
+    price: "Custom pricing",
+    hoursPerWeek: "10 hrs/week",
+    includes: [
+      "Administrative support",
+      "Email & calendar management",
+      "Scheduling support",
+      "Basic social media assistance",
+      "Canva & content support",
+      "Customer communication",
     ],
+    idealFor:
+      "Small businesses, creators, and solo entrepreneurs needing flexible weekly support.",
+    imageUrl: "",
+    buttonText: "Book a Call",
+    buttonLink: "/contact",
+    isHighlighted: false,
+  },
+  {
+    title: "Growth Support",
+    name: "20 HRS/WEEK",
+    description:
+      "Designed for businesses needing more consistent support across daily operations, content, and customer communication.",
+    price: "Custom pricing",
+    hoursPerWeek: "20 hrs/week",
+    includes: [
+      "Everything in Starter Support",
+      "Content scheduling & coordination",
+      "Ongoing social media support",
+      "Graphic & Canva design support",
+      "Customer service assistance",
+      "Workflow & organization support",
+    ],
+    idealFor: "Growing businesses needing more consistent day to day support.",
+    imageUrl: "",
+    buttonText: "Book a Call",
+    buttonLink: "/contact",
+    isHighlighted: true,
+  },
+  {
+    title: "Full Support",
+    name: "40 HRS/WEEK",
+    description:
+      "Comprehensive ongoing support for businesses needing a dedicated long term support system across operations, content, and digital management.",
+    price: "Custom pricing",
+    hoursPerWeek: "40 hrs/week",
+    includes: [
+      "Everything in Growth Support",
+      "Priority support & faster turnaround",
+      "Full admin & communication management",
+      "Advanced social media assistance",
+      "Creative & digital support",
+      "Business organization systems",
+      "Long term workflow support",
+    ],
+    idealFor:
+      "Businesses needing hands-on ongoing support across multiple areas of the business.",
+    imageUrl: "",
+    buttonText: "Book a Call",
+    buttonLink: "/contact",
+    isHighlighted: false,
+  },]
   },
 
   servicesDetails: {
@@ -316,7 +296,7 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
           "Instagram support",
           "TikTok support",
           "Facebook page management",
-          "LinkedIn content support",
+          "Facebook content support",
         ],
       },
     ],
@@ -393,6 +373,8 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
     title: "TESTIMONIALS",
     description:
       "Reliable support, smoother systems, and more time back for business owners.",
+    kicker: "CLIENT FEEDBACK",
+    fallbackDescription: "Real results + real words from clients.",
     items: [
       {
         name: "Nadya",
@@ -402,10 +384,8 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
         workTitle: "Wellness Business Support",
         description:
           "Inbox support, scheduling, Canva graphics, and content calendar assistance.",
-        workImageUrl:
-          "https://images.unsplash.com/photo-1520975594141-1b1b4c8f3f12?auto=format&fit=crop&w=1200&q=80",
-        imageUrl:
-          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+        workImageUrl: "",
+        imageUrl: "",
       },
       {
         name: "Rama",
@@ -415,10 +395,8 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
         workTitle: "Administrative & Social Media Support",
         description:
           "Email management, customer communication, content scheduling, and business organization.",
-        workImageUrl:
-          "https://images.unsplash.com/photo-1520975797658-19d4b8d7fcb2?auto=format&fit=crop&w=1200&q=80",
-        imageUrl:
-          "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=800&q=80",
+        workImageUrl: "",
+        imageUrl: "",
       },
     ],
   },
@@ -427,44 +405,45 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
     title: "ORGANIZED SUPPORT FOR GROWING BUSINESSES",
     description:
       "From scattered tasks to a cleaner workflow: organized admin, consistent content, and smoother customer communication.",
-    beforeImageUrl:
-      "https://images.unsplash.com/photo-1520975594141-1b1b4c8f3f12?auto=format&fit=crop&w=1200&q=80",
-    afterImageUrl:
-      "https://images.unsplash.com/photo-1520975594141-1b1b4c8f3f12?auto=format&fit=crop&w=1200&q=80",
+    beforeImageUrl: "",
+    afterImageUrl: "",
     beforeLabel: "Before support",
     afterLabel: "After support",
   },
 
   workProcess: {
     title: "HOW WE WORK",
+    kicker: "PROCESS",
+    description: "A flexible process designed to support your business smoothly.",
+    stepLabel: "Step",
     steps: [
       {
         number: "01",
         title: "Discovery & Needs Review",
         description:
           "We review your current tasks, business needs, support gaps, and preferred way of working.",
-        icon: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80",
+        icon: "",
       },
       {
         number: "02",
         title: "Support Plan Setup",
         description:
           "We define your weekly hours, priority tasks, communication flow, and systems to manage the work clearly.",
-        icon: "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=600&q=80",
+        icon: "",
       },
       {
         number: "03",
         title: "Execution & Coordination",
         description:
           "We help with admin, content, customer communication, creative tasks, and business organization based on your plan.",
-        icon: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80",
+        icon: "",
       },
       {
         number: "04",
         title: "Review & Improve",
         description:
           "We review what is working, improve the process, and adjust support based on your business priorities.",
-        icon: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+        icon: "",
       },
     ],
   },
@@ -473,13 +452,13 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
     title: "LET'S SIMPLIFY YOUR BUSINESS SUPPORT",
     description:
       "Tell us what tasks are taking too much of your time. We’ll help you choose the right support plan for your business.",
-    whatsappText: "Chat on WhatsApp",
-    whatsappLink: "https://wa.me/",
+    emailText: "Send email",
+    emailLink: "mailto:",
     email: "",
     socialLinks: [
       { platform: "Instagram", url: "" },
       { platform: "TikTok", url: "" },
-      { platform: "LinkedIn", url: "" },
+      { platform: "Facebook", url: "" },
     ],
   },
 
@@ -496,7 +475,7 @@ export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = {
     socialLinks: [
       { platform: "Instagram", url: "" },
       { platform: "TikTok", url: "" },
-      { platform: "LinkedIn", url: "" },
+      { platform: "Facebook", url: "" },
     ],
     copyrightText: "© {year} Virgo Social Services. All rights reserved.",
   },
@@ -511,6 +490,11 @@ pages: {
       "Virgo Social Services provides virtual assistance, administrative support, creative help, and social media support for businesses that need smoother daily operations.",
     processLabel: "PROCESS",
     processTitle: "How we support your business",
+    meetTeamLabel: "MEET THE TEAM",
+    meetTeamTitle: "Meet the team",
+    meetTeamDescription:
+      "A dedicated support team that keeps your operations, content, and communication running smoothly.",
+    meetTeamMembers: [],
     focusLabel: "FOCUS",
     focusText:
       "Administrative organization, customer communication, content support, Canva design, social media assistance, and flexible task management.",
@@ -525,7 +509,7 @@ pages: {
     badge: "CONTACT",
     fastestLabel: "FASTEST",
     fastestText:
-      "Chat via WhatsApp. Share what kind of support you need, your weekly workload, and your preferred timeline.",
+      "Email us. Share what kind of support you need, your weekly workload, and your preferred timeline.",
     contactOptionsLabel: "CONTACT OPTIONS",
     emailLabel: "EMAIL",
     emailCtaText: "Send email",
@@ -594,3 +578,7 @@ pages: {
   },
 },
 };
+
+export const DEFAULT_LANDING_PAGE_CONTENT: LandingPageContent = landingPageContentSchema.parse(
+  RAW_DEFAULT_LANDING_PAGE_CONTENT,
+);

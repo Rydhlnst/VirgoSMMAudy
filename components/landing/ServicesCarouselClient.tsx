@@ -4,30 +4,26 @@ import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { LandingPageContent } from "@/lib/landing-content/types";
-import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { MarkdownContent } from "@/components/landing/MarkdownContent";
+import { EditableImage } from "@/components/cms/EditableImage";
+import { EditableText } from "@/components/cms/EditableText";
+import { EditableTextarea } from "@/components/cms/EditableTextarea";
+import { useEditModeContext } from "@/components/cms/EditModeProvider";
 
-function formatIdr(input: string): string {
-  const trimmed = input.trim();
-  if (!trimmed) return "";
-
-  if (/^(idr|rp)\b/i.test(trimmed)) return trimmed.replace(/\s+/g, " ");
-
-  const digits = trimmed.replace(/[^\d]/g, "");
-  if (!digits) return trimmed;
-
-  try {
-    const n = Number(digits);
-    if (!Number.isFinite(n)) return `IDR ${digits}`;
-    return `IDR ${new Intl.NumberFormat("id-ID").format(n)}`;
-  } catch {
-    return `IDR ${digits}`;
-  }
-}
-
-export function ServicesCarouselClient({ items }: { items: LandingPageContent["services"]["items"] }) {
+export function ServicesCarouselClient({
+  items,
+  carouselHintText,
+  idealForLabel,
+}: {
+  items: LandingPageContent["services"]["items"];
+  carouselHintText: string;
+  idealForLabel: string;
+}) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const context = useEditModeContext();
+
+  const itemsFromContext = context?.getFieldValue("services.items");
+  const renderItems = Array.isArray(itemsFromContext) ? (itemsFromContext as typeof items) : items;
 
   function prefersReducedMotion() {
     return (
@@ -78,9 +74,38 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
     <div className="mt-12">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div className="text-xs font-extrabold uppercase tracking-[0.22em] text-[color:var(--inverse-muted-foreground-weaker)]">
-          Swipe / Scroll
+          <EditableText path="services.carouselHintText" value={carouselHintText} />
         </div>
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="flex items-center gap-2">
+          {context?.isEditMode ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="h-10 rounded-full border-[color:var(--inverse-border-subtle)] bg-[color:var(--overlay-inverse-1)] text-[color:var(--surface-inverse-foreground)] hover:bg-[color:var(--overlay-inverse-2)]"
+              onClick={() => {
+                const current = Array.isArray(itemsFromContext) ? (itemsFromContext as typeof items) : items;
+                context.updateField("services.items", [
+                  ...current,
+                  {
+                    title: "",
+                    name: "New Service",
+                    description: "",
+                    price: "",
+                    hoursPerWeek: "",
+                    includes: [],
+                    idealFor: "",
+                    imageUrl: "",
+                    buttonText: "Get Started",
+                    buttonLink: "/contact",
+                    isHighlighted: false,
+                  },
+                ]);
+              }}
+            >
+              Add item
+            </Button>
+          ) : null}
+          <div className="hidden items-center gap-2 md:flex">
           <Button
             type="button"
             variant="outline"
@@ -102,6 +127,7 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
             <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
+        </div>
       </div>
 
       <div
@@ -109,10 +135,8 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
         className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-label="Services carousel"
       >
-        {items.map((svc, idx) => {
+        {renderItems.map((svc, idx) => {
           const highlighted = Boolean(svc.isHighlighted);
-          const price = formatIdr(svc.price);
-          const headline = price || svc.title || "Custom";
           return (
             <div
               key={idx}
@@ -120,7 +144,12 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
             >
               <div className="rounded-[44px] bg-[color:var(--card)] p-3 text-[color:var(--card-foreground)] shadow-[var(--shadow-4)]">
                 <div className="relative overflow-hidden rounded-[36px]">
-                  <Skeleton className="aspect-[4/3] w-full rounded-[36px]" />
+                  <EditableImage
+                    path={`services.items.${idx}.imageUrl`}
+                    src={svc.imageUrl}
+                    alt={svc.title}
+                    imgClassName="aspect-[4/3] w-full rounded-[36px] object-cover"
+                  />
                 </div>
 
                 <div
@@ -130,27 +159,35 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
                   ].join(" ")}
                 >
                   <div className="text-center">
-                    <div className="text-3xl font-black tracking-tight sm:text-4xl">{svc.title}</div>
+                    <EditableText
+                      as="div"
+                      path={`services.items.${idx}.title`}
+                      value={svc.title}
+                      className="text-3xl font-black tracking-tight sm:text-4xl"
+                    />
                     {svc.hoursPerWeek ? (
-                      <div className="mt-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)]">
-                        {svc.hoursPerWeek}
-                      </div>
+                      <EditableText
+                        as="div"
+                        path={`services.items.${idx}.hoursPerWeek`}
+                        value={svc.hoursPerWeek}
+                        className="mt-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)]"
+                      />
                     ) : null}
-                    {/* <div className="mt-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)]">
-                      {svc.nae}
-                    </div> */}
                   </div>
 
                   <div className="mt-5 flex flex-1 flex-col">
-                    {svc.description ? (
-                      <MarkdownContent content={svc.description} className="text-sm text-[color:var(--muted-foreground)]" />
-                    ) : null}
+                    <EditableTextarea
+                      path={`services.items.${idx}.description`}
+                      value={svc.description}
+                      rows={4}
+                      className="text-sm text-[color:var(--muted-foreground)]"
+                    />
                     {svc.includes?.length ? (
                       <ul className="mt-4 grid gap-2 text-left text-sm text-[color:var(--muted-foreground)]">
                         {svc.includes.slice(0, 6).map((b, bIdx) => (
                           <li key={bIdx} className="flex gap-2">
                             <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--muted-foreground-weak)]" />
-                            <span>{b}</span>
+                            <EditableText path={`services.items.${idx}.includes.${bIdx}`} value={b} />
                           </li>
                         ))}
                       </ul>
@@ -158,9 +195,14 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
                     {svc.idealFor ? (
                       <div className="mt-4 text-left text-sm">
                         <span className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)]">
-                          Ideal for
+                          <EditableText path="services.idealForLabel" value={idealForLabel} />
                         </span>
-                        <div className="mt-1 text-[color:var(--muted-foreground)]">{svc.idealFor}</div>
+                        <EditableText
+                          as="div"
+                          path={`services.items.${idx}.idealFor`}
+                          value={svc.idealFor}
+                          className="mt-1 text-[color:var(--muted-foreground)]"
+                        />
                       </div>
                     ) : null}
                   </div>
@@ -175,9 +217,29 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
                           : ""
                       }
                     >
-                      <Link href={svc.buttonLink}>{svc.buttonText}</Link>
+                      <Link href={svc.buttonLink}>
+                        <EditableText path={`services.items.${idx}.buttonText`} value={svc.buttonText} />
+                      </Link>
                     </Button>
                   </div>
+
+                  {context?.isEditMode ? (
+                    <div className="mt-4 flex justify-center">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          const current = Array.isArray(itemsFromContext) ? (itemsFromContext as typeof items) : items;
+                          context.updateField(
+                            "services.items",
+                            current.filter((_, i) => i !== idx),
+                          );
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -187,3 +249,4 @@ export function ServicesCarouselClient({ items }: { items: LandingPageContent["s
     </div>
   );
 }
+

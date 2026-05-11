@@ -1,7 +1,8 @@
 import { toErrorResponse } from "@/lib/api/errors";
 import { successResponse } from "@/lib/api/response";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { resetLandingContentToDefault } from "@/lib/landing-content/landing-content.service";
+import { defaultHomeContent } from "@/lib/cms/cms-content-default";
+import { writeLandingPageContent } from "@/lib/landing-content/storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const data = await resetLandingContentToDefault();
+    const data = await writeLandingPageContent(defaultHomeContent);
     return successResponse(data, { message: "Landing page content reset to default successfully." });
   } catch (error) {
     return toErrorResponse(error);

@@ -1,6 +1,8 @@
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import Link from "next/link";
-import { MarkdownContent } from "@/components/landing/MarkdownContent";
+import { getSocialIcon } from "@/lib/social-icons";
+import { EditableText } from "@/components/cms/EditableText";
+import { EditableTextarea } from "@/components/cms/EditableTextarea";
 
 function renderYearTemplate(text: string, year: number) {
   return text.replaceAll("{year}", String(year));
@@ -19,13 +21,14 @@ export function Footer({ footer }: { footer: LandingPageContent["footer"] }) {
               href="/"
               className="hero-name text-2xl transition-transform motion-reduce:transition-none hover:-rotate-1 md:text-3xl motion-reduce:hover:rotate-0"
             >
-              {footer.brandName}
+              <EditableText path="footer.brandName" value={footer.brandName} />
             </Link>
             {footer.description ? (
-              <MarkdownContent
-                content={footer.description}
+              <EditableTextarea
+                path="footer.description"
+                value={footer.description}
                 className="mt-4 max-w-md text-sm text-(--inverse-muted-foreground)"
-                tone="dark"
+                rows={3}
               />
             ) : null}
           </div>
@@ -43,7 +46,7 @@ export function Footer({ footer }: { footer: LandingPageContent["footer"] }) {
                       href={l.href}
                       className="text-[color:var(--inverse-muted-foreground)] transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:text-[color:var(--surface-inverse-foreground)] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0"
                     >
-                      {l.label}
+                      <EditableText path={`footer.links.${idx}.label`} value={l.label} />
                     </Link>
                   ))}
                 </nav>
@@ -56,17 +59,21 @@ export function Footer({ footer }: { footer: LandingPageContent["footer"] }) {
                   SOCIAL
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {footer.socialLinks.map((s, idx) => (
-                    <Link
-                      key={idx}
-                      href={s.url || "#"}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full border border-[color:var(--inverse-border-subtle)] px-4 py-2 text-xs font-semibold text-[color:var(--inverse-muted-foreground)] transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:text-[color:var(--surface-inverse-foreground)] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0"
-                    >
-                      {s.platform}
-                    </Link>
-                  ))}
+                  {footer.socialLinks.map((s, idx) => {
+                    const Icon = getSocialIcon(s.platform);
+                    return (
+                      <Link
+                        key={idx}
+                        href={s.url || "#"}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-full border border-[color:var(--inverse-border-subtle)] px-4 py-2 text-xs font-semibold text-[color:var(--inverse-muted-foreground)] transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:text-[color:var(--surface-inverse-foreground)] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0"
+                      >
+                        <Icon className="h-3.5 w-3.5" aria-hidden />
+                        <EditableText path={`footer.socialLinks.${idx}.platform`} value={s.platform} />
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}

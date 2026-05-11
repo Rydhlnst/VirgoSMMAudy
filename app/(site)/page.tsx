@@ -1,7 +1,6 @@
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { BrandStrip } from "@/components/landing/BrandStrip";
-import { IntroductionSection } from "@/components/landing/IntroductionSection";
 import { AboutSection } from "@/components/landing/AboutSection";
 import { PortfolioSection } from "@/components/landing/PortfolioSection";
 import { ServicesSection } from "@/components/landing/ServicesSection";

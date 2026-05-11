@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/lib/auth";
 import { isAdminSession } from "@/lib/auth/admin";
 import Link from "next/link";
+import { EditModeToggle } from "@/components/admin/EditModeToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,10 @@ export default async function AdminPage() {
             <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">ShadCN-based content editor</div>
           </div>
           <div className="flex items-center gap-2">
+            <Button asChild variant="accent" className="rounded-full">
+              <Link href="/admin/pages/home/edit">Inline Edit</Link>
+            </Button>
+            <EditModeToggle goTo="/" />
             <Button asChild variant="outline" className="rounded-full">
               <Link href="/">View Site</Link>
             </Button>

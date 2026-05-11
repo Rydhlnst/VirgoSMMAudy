@@ -10,7 +10,6 @@ export function mapLandingContentRowToContent(row: LandingPageContentRow): Landi
     introduction: row.introduction,
     about: row.about,
     portfolio: row.portfolio,
-    portfolioDetails: row.portfolioDetails,
     services: row.services,
     servicesDetails: row.servicesDetails,
     testimonials: row.testimonials,

@@ -2,7 +2,7 @@ import { toErrorResponse } from "@/lib/api/errors";
 import { safeJson } from "@/lib/api/parse-request";
 import { errorResponse, successResponse } from "@/lib/api/response";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { upsertAdminLandingContent } from "@/lib/landing-content/landing-content.service";
+import { writeLandingPageContent } from "@/lib/landing-content/storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const data = await upsertAdminLandingContent(body);
+    const data = await writeLandingPageContent(body);
     return successResponse(data, { message: "Landing page content updated successfully." });
   } catch (error) {
     return toErrorResponse(error);

@@ -67,6 +67,10 @@ export const aboutSchema = z.object({
 
 export const portfolioSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("PORTFOLIO"),
+  videoLabel: z.string().min(1).default("VIDEOFOLIO"),
+  photoLabel: z.string().min(1).default("PHOTOFOLIO"),
+  emptyVideoText: z.string().min(1).default("No video items yet."),
+  emptyPhotoText: z.string().min(1).default("No photo items yet."),
   items: z
     .array(
       z.object({
@@ -80,24 +84,11 @@ export const portfolioSchema = z.object({
     .default([]),
 });
 
-export const portfolioDetailsSchema = z.object({
-  projects: z
-    .array(
-      z.object({
-        title: z.string().min(1, "Title wajib diisi"),
-        client: z.string().default(""),
-        brief: z.string().default(""),
-        approach: z.array(z.string().min(1)).default([]),
-        result: z.string().default(""),
-        deliverables: z.array(z.string().min(1)).default([]),
-      }),
-    )
-    .default([]),
-});
-
 export const servicesSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("SERVICES"),
   subtitle: z.string().default(""),
+  carouselHintText: z.string().min(1).default("Swipe / Scroll"),
+  idealForLabel: z.string().min(1).default("Ideal for"),
   viewAllText: z.string().min(1, "View all text wajib diisi").default("View all services"),
   viewAllLink: z.string().min(1, "View all link wajib diisi").default("/services"),
   items: z
@@ -143,6 +134,8 @@ export const servicesDetailsSchema = z.object({
 export const testimonialsSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("TESTIMONIALS"),
   description: z.string().default(""),
+  kicker: z.string().min(1).default("CLIENT FEEDBACK"),
+  fallbackDescription: z.string().min(1).default("Real results + real words from clients."),
   items: z
     .array(
       z.object({
@@ -169,6 +162,9 @@ export const brandingSchema = z.object({
 
 export const workProcessSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").default("MY WORK PROCESS"),
+  kicker: z.string().min(1).default("PROCESS"),
+  description: z.string().min(1).default("A flexible process designed to support your business smoothly."),
+  stepLabel: z.string().min(1).default("Step"),
   steps: z
     .array(
       z.object({
@@ -181,21 +177,32 @@ export const workProcessSchema = z.object({
     .default([]),
 });
 
-export const contactSchema = z.object({
-  title: z.string().min(1, "Title wajib diisi").default("LET'S WORK TOGETHER"),
-  description: z.string().default(""),
-  whatsappText: z.string().min(1, "WhatsApp text wajib diisi").default("Chat on WhatsApp"),
-  whatsappLink: z.string().min(1, "WhatsApp link wajib diisi").default("https://wa.me/"),
-  email: z.string().email("Email tidak valid").or(z.literal("")).optional(),
-  socialLinks: z
-    .array(
-      z.object({
-        platform: z.string().min(1, "Platform wajib diisi"),
-        url: z.string().url("URL tidak valid").or(z.literal("")),
-      }),
-    )
-    .default([]),
-});
+export const contactSchema = z
+  .object({
+    title: z.string().min(1, "Title wajib diisi").default("LET'S WORK TOGETHER"),
+    description: z.string().default(""),
+    emailText: z.string().min(1).optional(),
+    emailLink: z.string().min(1).optional(),
+    whatsappText: z.string().min(1).optional(),
+    whatsappLink: z.string().min(1).optional(),
+    email: z.string().email("Email tidak valid").or(z.literal("")).optional(),
+    socialLinks: z
+      .array(
+        z.object({
+          platform: z.string().min(1, "Platform wajib diisi"),
+          url: z.string().url("URL tidak valid").or(z.literal("")),
+        }),
+      )
+      .default([]),
+  })
+  .transform((value) => ({
+    title: value.title,
+    description: value.description,
+    emailText: value.emailText ?? value.whatsappText ?? "Send email",
+    emailLink: value.emailLink ?? value.whatsappLink ?? "mailto:",
+    email: value.email,
+    socialLinks: value.socialLinks,
+  }));
 
 export const footerSchema = z.object({
   brandName: z.string().min(1, "Brand name wajib diisi").default("Virgo Social"),
@@ -224,7 +231,7 @@ export const footerSchema = z.object({
   copyrightText: z
     .string()
     .min(1, "Copyright wajib diisi")
-    .default("© {year} Virgo Social. All rights reserved."),
+    .default("Â© {year} Virgo Social. All rights reserved."),
 });
 
 export const pagesSchema = z
@@ -240,7 +247,23 @@ export const pagesSchema = z
           .min(1)
           .default("Images on this page are placeholders (skeletons) for fast loading. Replace them with real assets later."),
         processLabel: z.string().min(1).default("PROCESS"),
-        processTitle: z.string().min(1).default("How I work"),
+        processTitle: z.string().min(1).default("How we support your business"),
+        meetTeamLabel: z.string().min(1).default("MEET THE TEAM"),
+        meetTeamTitle: z.string().min(1).default("Meet the team"),
+        meetTeamDescription: z
+          .string()
+          .min(1)
+          .default("A dedicated support team that keeps your operations, content, and communication running smoothly."),
+        meetTeamMembers: z
+          .array(
+            z.object({
+              name: z.string().min(1).default("Team Member"),
+              role: z.string().min(1).default("Support Specialist"),
+              bio: z.string().default(""),
+              imageUrl: urlOrEmpty,
+            }),
+          )
+          .default([]),
         focusLabel: z.string().min(1).default("FOCUS"),
         focusText: z
           .string()
@@ -258,7 +281,12 @@ export const pagesSchema = z
         notesLabel: "NOTES",
         notesText: "Images on this page are placeholders (skeletons) for fast loading. Replace them with real assets later.",
         processLabel: "PROCESS",
-        processTitle: "How I work",
+        processTitle: "How we support your business",
+        meetTeamLabel: "MEET THE TEAM",
+        meetTeamTitle: "Meet the team",
+        meetTeamDescription:
+          "A dedicated support team that keeps your operations, content, and communication running smoothly.",
+        meetTeamMembers: [],
         focusLabel: "FOCUS",
         focusText: "Editorial visuals, action-driven storytelling, and a content system you can run consistently.",
         availabilityLabel: "AVAILABILITY",
@@ -270,7 +298,7 @@ export const pagesSchema = z
       .object({
         badge: z.string().min(1).default("CONTACT"),
         fastestLabel: z.string().min(1).default("FASTEST"),
-        fastestText: z.string().min(1).default("Chat via WhatsApp. Include your goal and timeline."),
+        fastestText: z.string().min(1).default("Email us. Include your goal and timeline."),
         contactOptionsLabel: z.string().min(1).default("CONTACT OPTIONS"),
         emailLabel: z.string().min(1).default("EMAIL"),
         emailCtaText: z.string().min(1).default("Send email"),
@@ -279,7 +307,7 @@ export const pagesSchema = z
         requiredInfoLabel: z.string().min(1).default("WHAT I NEED"),
         requiredInfoItems: z
           .array(z.string().min(1))
-          .default(["Your offer + target audience", "This month’s goal (sales, leads, awareness)", "Timeline + budget range"]),
+          .default(["Your offer + target audience", "This monthâ€™s goal (sales, leads, awareness)", "Timeline + budget range"]),
         previewLabel: z.string().min(1).default("PREVIEW"),
         previewText: z.string().min(1).default("Skeleton blocks = fast loading placeholders. Replace with real assets later."),
       })
@@ -302,7 +330,7 @@ export const pagesSchema = z
         openLinkText: z.string().min(1).default("Open"),
         noLinkText: z.string().min(1).default("No link"),
         detailLabel: z.string().min(1).default("DETAILS"),
-        detailTitle: z.string().min(1).default("Client brief → outcome"),
+        detailTitle: z.string().min(1).default("Client brief â†’ outcome"),
         cmsHintText: z.string().min(1).default("Editable via CMS"),
         clientFallbackLabel: z.string().min(1).default("Client"),
         briefPillText: z.string().min(1).default("Brief"),
@@ -348,7 +376,6 @@ export const landingPageContentSchema = z.object({
   introduction: introductionSchema,
   about: aboutSchema,
   portfolio: portfolioSchema,
-  portfolioDetails: portfolioDetailsSchema,
   services: servicesSchema,
   servicesDetails: servicesDetailsSchema,
   testimonials: testimonialsSchema,
@@ -357,4 +384,18 @@ export const landingPageContentSchema = z.object({
   contact: contactSchema,
   footer: footerSchema,
   pages: pagesSchema,
+  cmsMeta: z
+    .object({
+      images: z
+        .record(
+          z.string(),
+          z.object({
+            x: z.number().min(0).max(100).default(50),
+            y: z.number().min(0).max(100).default(50),
+            zoom: z.number().min(1).max(3).default(1),
+          }),
+        )
+        .default({}),
+    })
+    .default({ images: {} }),
 });

@@ -36,7 +36,7 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
                 as="div"
                 path="hero.badge"
                 value={hero.badge}
-                className="inline-flex rounded-full bg-accent px-5 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-[color:var(--accent-foreground)]"
+                className="inline-flex rounded-full bg-accent px-5 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-accent-foreground"
               />
               {extraTags.length ? (
                 <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-(--muted-foreground-weak)">
@@ -51,7 +51,7 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
               path="hero.description"
               value={hero.description}
               rows={4}
-              className="mt-6 max-w-xl text-center text-base text-[color:var(--muted-foreground)] sm:text-lg lg:text-left"
+              className="mt-6 max-w-xl text-center text-base text-(--muted-foreground) sm:text-lg lg:text-left"
             />
 
             <div className="mt-auto pt-10">
@@ -73,7 +73,7 @@ export function HeroSection({ hero }: { hero: LandingPageContent["hero"] }) {
                       onClick={() => {
                         context.updateField("hero.tags", [...tagsValue, "New tag"]);
                       }}
-                      className="inline-flex items-center gap-2 rounded-full border border-dashed border-accent/60 bg-transparent px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--muted-foreground-weak)] transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                      className="inline-flex items-center gap-2 rounded-full border border-dashed border-accent/60 bg-transparent px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-(--muted-foreground-weak) transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                       aria-label="Add hero tag"
                     >
                       <Plus className="h-3.5 w-3.5 text-accent" aria-hidden />

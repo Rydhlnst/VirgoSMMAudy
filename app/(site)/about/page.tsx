@@ -1,9 +1,9 @@
 import { LandingShell } from "@/components/landing/LandingShell";
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import Link from "next/link";
-import { EditableImage } from "@/components/cms/EditableImage";
 import { EditableMarkdown } from "@/components/cms/EditableMarkdown";
 import { EditableText } from "@/components/cms/EditableText";
+import { MeetTheTeamGridClient } from "./_components/MeetTheTeamGridClient";
 
 export const dynamic = "force-dynamic";
 
@@ -134,48 +134,7 @@ export default async function AboutPage() {
                   className="mt-4 max-w-3xl text-sm text-foreground/70 sm:text-base"
                 />
               ) : null}
-              <div className="mt-8 grid w-full gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {page.meetTeamMembers.map((member, idx) => {
-                  const tiltClass = idx % 2 === 0 ? "-rotate-2" : "rotate-2";
-                  return (
-                    <div
-                      key={`${member.name}-${idx}`}
-                      className="w-full overflow-hidden rounded-[32px] border border-foreground/10 bg-card p-4"
-                    >
-                      <div
-                        className={`relative aspect-[4/5] w-full overflow-hidden rounded-[24px] transition-transform motion-reduce:transition-none ${tiltClass}`}
-                      >
-                        <EditableImage
-                          path={`pages.about.meetTeamMembers.${idx}.imageUrl`}
-                          src={member.imageUrl}
-                          alt={member.name}
-                          className="h-full w-full"
-                          imgClassName="h-full w-full rounded-[24px] object-cover"
-                        />
-                      </div>
-                      <div className="mt-4">
-                        <EditableText
-                          path={`pages.about.meetTeamMembers.${idx}.name`}
-                          value={member.name}
-                          className="hero-name text-2xl"
-                        />
-                        <EditableText
-                          path={`pages.about.meetTeamMembers.${idx}.role`}
-                          value={member.role}
-                          className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-foreground/55"
-                        />
-                        {member.bio ? (
-                          <EditableMarkdown
-                            path={`pages.about.meetTeamMembers.${idx}.bio`}
-                            value={member.bio}
-                            className="mt-3 text-sm text-foreground/72"
-                          />
-                        ) : null}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <MeetTheTeamGridClient members={page.meetTeamMembers} />
             </div>
           </div>
         </div>

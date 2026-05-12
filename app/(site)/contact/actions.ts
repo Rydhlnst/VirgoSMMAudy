@@ -15,8 +15,9 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
 
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.CONTACT_EMAIL_FROM?.trim();
-  const to = process.env.CONTACT_EMAIL_TO?.trim();
-  if (!apiKey || !from || !to) return { ok: false, error: "Email service is not configured." };
+  const ownerEmail = process.env.CONTACT_EMAIL_TO?.trim();
+  const replyTo = process.env.CONTACT_EMAIL_REPLY_TO?.trim() ?? ownerEmail;
+  if (!apiKey || !from) return { ok: false, error: "Email service is not configured." };
 
   try {
     const resend = new Resend(apiKey);
@@ -26,22 +27,29 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
     const safeSubject = escapeHtml(data.subject);
     const safeMessageHtml = escapeHtml(data.message).replaceAll("\n", "<br />");
 
-    const subject = `New contact form: ${data.subject}`;
+    const subject = `We received your message: ${data.subject}`;
     const text = [
-      `Name: ${data.name}`,
-      `Email: ${data.email}`,
-      `Subject / Business Name: ${data.subject}`,
+      `Hi ${data.name},`,
       "",
-      data.message,
+      "Thanks for contacting us. We have received your message and will get back to you soon.",
+      "",
+      "Your submission:",
+      `- Name: ${data.name}`,
+      `- Email: ${data.email}`,
+      `- Subject / Business Name: ${data.subject}`,
+      "",
+      data.message.trim(),
     ].join("\n");
 
     const html = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
-        <h2>New Contact Form Submission</h2>
+        <p>Hi ${safeName},</p>
+        <p>Thanks for contacting us. We have received your message and will get back to you soon.</p>
+        <hr />
+        <h3>Your submission</h3>
         <p><strong>Name:</strong> ${safeName}</p>
         <p><strong>Email:</strong> ${safeEmail}</p>
         <p><strong>Subject / Business Name:</strong> ${safeSubject}</p>
-        <hr />
         <p><strong>Message:</strong></p>
         <p>${safeMessageHtml}</p>
       </div>
@@ -49,10 +57,11 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
 
     const { error } = await resend.emails.send({
       from,
-      to,
+      to: data.email,
+      ...(ownerEmail ? { bcc: ownerEmail } : {}),
       text,
       html,
-      replyTo: data.email,
+      ...(replyTo ? { replyTo } : {}),
       subject,
     });
 

@@ -29,6 +29,7 @@ export function ContactForm() {
   const onSubmit: SubmitHandler<ContactEmailInput> = (values) => {
     startTransition(async () => {
       const result = await sendContactEmail(values);
+      console.log("[contact] sendContactEmail result", result);
       if (!result.ok) {
         toast.error(result.error);
         return;

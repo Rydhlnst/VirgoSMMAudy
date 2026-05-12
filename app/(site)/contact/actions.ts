@@ -17,9 +17,24 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
   const from = process.env.CONTACT_EMAIL_FROM?.trim();
   const ownerEmail = process.env.CONTACT_EMAIL_TO?.trim();
   const replyTo = process.env.CONTACT_EMAIL_REPLY_TO?.trim() ?? ownerEmail;
-  if (!apiKey || !from) return { ok: false, error: "Email service is not configured." };
+  if (!apiKey || !from) {
+    console.error("[contact] email not configured", {
+      hasApiKey: Boolean(apiKey),
+      fromConfigured: Boolean(from),
+      ownerBccConfigured: Boolean(ownerEmail),
+      replyToConfigured: Boolean(replyTo),
+    });
+    return { ok: false, error: "Email service is not configured." };
+  }
 
   try {
+    console.log("[contact] sending email", {
+      to: maskEmail(data.email),
+      from,
+      ownerBccConfigured: Boolean(ownerEmail),
+      replyToConfigured: Boolean(replyTo),
+    });
+
     const resend = new Resend(apiKey);
 
     const safeName = escapeHtml(data.name);
@@ -66,13 +81,20 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
     });
 
     if (error) {
-      console.error("[contact] resend error", error);
+      console.error("[contact] resend error", {
+        to: maskEmail(data.email),
+        error,
+      });
       return { ok: false, error: "Failed to send email." };
     }
 
+    console.log("[contact] email sent", { to: maskEmail(data.email) });
     return { ok: true };
   } catch (error) {
-    console.error("[contact] send error", error);
+    console.error("[contact] send error", {
+      to: maskEmail(data.email),
+      error,
+    });
     return { ok: false, error: "Failed to send email." };
   }
 }
@@ -84,4 +106,13 @@ function escapeHtml(input: string) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function maskEmail(email: string) {
+  const trimmed = email.trim();
+  const at = trimmed.indexOf("@");
+  if (at <= 1) return "***";
+  const local = trimmed.slice(0, at);
+  const domain = trimmed.slice(at + 1);
+  return `${local[0]}***@${domain}`;
 }

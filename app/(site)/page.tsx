@@ -23,7 +23,7 @@ export default async function Home() {
         <BrandStrip brandStrip={content.brandStrip} />
         {/* <IntroductionSection introduction={content.introduction} /> */}
         <Divider className="py-10" />
-        <AboutSection about={content.about} />
+        {/* <AboutSection about={content.about} /> */}
         <Divider className="py-10" />
         <PortfolioSection portfolio={content.portfolio} />
         <ServicesSection services={content.services} />

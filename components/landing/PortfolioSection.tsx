@@ -3,6 +3,7 @@
 import type { LandingPageContent } from "@/lib/landing-content/types";
 import { Video, Image as ImageIcon, HeartIcon, ArrowUpRight } from "lucide-react";
 import { EditableImage } from "@/components/cms/EditableImage";
+import { EditableVideo } from "@/components/cms/EditableVideo";
 import { EditableText } from "@/components/cms/EditableText";
 import { Button } from "@/components/ui/button";
 import { useEditModeContext } from "@/components/cms/EditModeProvider";
@@ -50,12 +51,21 @@ function PortfolioGrid({
             className="group flex min-h-[340px] flex-col rounded-[34px] border-none border-foreground bg-card p-3 shadow-sm transition motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0"
           >
             <div className="relative overflow-hidden rounded-2xl border border-foreground/10">
-              <EditableImage
-                path={`portfolio.items.${index}.thumbnailUrl`}
-                src={item.thumbnailUrl}
-                alt={item.title}
-                imgClassName="aspect-[4/3] w-full rounded-2xl object-cover"
-              />
+              {item.type === "video" ? (
+                <EditableVideo
+                  path={`portfolio.items.${index}.link`}
+                  src={item.link}
+                  posterSrc={item.thumbnailUrl}
+                  videoClassName="aspect-[4/3] w-full rounded-2xl object-cover"
+                />
+              ) : (
+                <EditableImage
+                  path={`portfolio.items.${index}.thumbnailUrl`}
+                  src={item.thumbnailUrl}
+                  alt={item.title}
+                  imgClassName="aspect-[4/3] w-full rounded-2xl object-cover"
+                />
+              )}
             </div>
             <div className="flex min-h-[110px] flex-1 flex-col px-1 pb-2 pt-3">
               <EditableText

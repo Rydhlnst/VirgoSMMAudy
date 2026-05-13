@@ -86,13 +86,53 @@ export const portfolioSchema = z.object({
   emptyPhotoText: z.string().min(1).default("No photo items yet."),
   items: z
     .array(
-      z.object({
-        type: z.enum(["video", "photo"]),
-        title: z.string().min(1, "Title wajib diisi"),
-        thumbnailUrl: imageSrcOrEmpty,
-        link: z.string().url("Link tidak valid").or(z.literal("")).optional(),
-        caption: z.string().optional(),
-      }),
+      z
+        .object({
+          type: z.enum(["video", "photo"]),
+          title: z.string().min(1, "Title wajib diisi"),
+          thumbnailUrl: imageSrcOrEmpty,
+          link: z.string().url("Link tidak valid").or(z.literal("")).default(""),
+          caption: z.string().optional(),
+        })
+        .superRefine((val, ctx) => {
+          if (!val.link) return;
+
+          const lower = val.link.toLowerCase();
+          const pathname = (() => {
+            if (lower.startsWith("/")) return lower;
+            try {
+              return new URL(lower).pathname.toLowerCase();
+            } catch {
+              return "";
+            }
+          })();
+
+          const lastDot = pathname.lastIndexOf(".");
+          const ext = lastDot >= 0 ? pathname.slice(lastDot + 1) : "";
+          if (!ext) return;
+
+          const imageExts = new Set(["png", "jpg", "jpeg", "webp", "gif", "svg", "avif"]);
+          const videoExts = new Set(["mp4", "webm", "mov", "m4v", "avi", "mkv"]);
+
+          const isImage = imageExts.has(ext);
+          const isVideo = videoExts.has(ext);
+          if (!isImage && !isVideo) return;
+
+          if (val.type === "video" && isImage) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["link"],
+              message: "Untuk item video, link harus URL video (bukan gambar).",
+            });
+          }
+          if (val.type === "photo" && isVideo) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["link"],
+              message: "Untuk item photo, link harus URL gambar (bukan video).",
+            });
+          }
+        }),
     )
     .default([]),
 });
@@ -403,7 +443,6 @@ export const landingPageContentSchema = z.object({
     })
     .default({ images: {} }),
 });
-
 
 
 

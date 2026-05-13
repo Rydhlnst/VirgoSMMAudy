@@ -35,7 +35,7 @@ export function ContactForm() {
         return;
       }
 
-      toast.success("Email sent. Thank you!");
+      toast.success("Message sent. Thank you!");
       form.reset();
     });
   };

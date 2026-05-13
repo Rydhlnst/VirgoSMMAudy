@@ -3,7 +3,6 @@
 import { contactEmailSchema, type ContactEmailInput } from "./schema";
 import { Resend } from "resend";
 
-
 export type SendContactEmailResult = { ok: true } | { ok: false; error: string };
 
 export async function sendContactEmail(values: ContactEmailInput): Promise<SendContactEmailResult> {
@@ -16,13 +15,12 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.CONTACT_EMAIL_FROM?.trim();
   const ownerEmail = process.env.CONTACT_EMAIL_TO?.trim();
-  const replyTo = process.env.CONTACT_EMAIL_REPLY_TO?.trim() ?? ownerEmail;
-  if (!apiKey || !from) {
+  const userAutoReplyEnabled = parseBooleanEnv(process.env.CONTACT_EMAIL_SEND_AUTO_REPLY, true);
+  if (!apiKey || !from || !ownerEmail) {
     console.error("[contact] email not configured", {
       hasApiKey: Boolean(apiKey),
       fromConfigured: Boolean(from),
-      ownerBccConfigured: Boolean(ownerEmail),
-      replyToConfigured: Boolean(replyTo),
+      ownerToConfigured: Boolean(ownerEmail),
     });
     return { ok: false, error: "Email service is not configured." };
   }
@@ -31,8 +29,8 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
     console.log("[contact] sending email", {
       to: maskEmail(data.email),
       from,
-      ownerBccConfigured: Boolean(ownerEmail),
-      replyToConfigured: Boolean(replyTo),
+      ownerToConfigured: Boolean(ownerEmail),
+      userAutoReplyEnabled,
     });
 
     const resend = new Resend(apiKey);
@@ -42,13 +40,10 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
     const safeSubject = escapeHtml(data.subject);
     const safeMessageHtml = escapeHtml(data.message).replaceAll("\n", "<br />");
 
-    const subject = `We received your message: ${data.subject}`;
-    const text = [
-      `Hi ${data.name},`,
+    const ownerSubject = `New contact: ${data.subject}`;
+    const ownerText = [
+      "New contact form submission:",
       "",
-      "Thanks for contacting us. We have received your message and will get back to you soon.",
-      "",
-      "Your submission:",
       `- Name: ${data.name}`,
       `- Email: ${data.email}`,
       `- Subject / Business Name: ${data.subject}`,
@@ -56,43 +51,85 @@ export async function sendContactEmail(values: ContactEmailInput): Promise<SendC
       data.message.trim(),
     ].join("\n");
 
-    const html = `
+    const ownerHtml = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
-        <p>Hi ${safeName},</p>
-        <p>Thanks for contacting us. We have received your message and will get back to you soon.</p>
-        <hr />
-        <h3>Your submission</h3>
-        <p><strong>Name:</strong> ${safeName}</p>
-        <p><strong>Email:</strong> ${safeEmail}</p>
-        <p><strong>Subject / Business Name:</strong> ${safeSubject}</p>
-        <p><strong>Message:</strong></p>
+        <h2 style="margin: 0 0 12px;">New contact form submission</h2>
+        <p style="margin: 0 0 6px;"><strong>Name:</strong> ${safeName}</p>
+        <p style="margin: 0 0 6px;"><strong>Email:</strong> ${safeEmail}</p>
+        <p style="margin: 0 0 6px;"><strong>Subject / Business Name:</strong> ${safeSubject}</p>
+        <p style="margin: 16px 0 6px;"><strong>Message:</strong></p>
         <p>${safeMessageHtml}</p>
       </div>
     `;
 
-    const { error } = await resend.emails.send({
+    const { error: ownerError } = await resend.emails.send({
       from,
-      to: data.email,
-      ...(ownerEmail ? { bcc: ownerEmail } : {}),
-      text,
-      html,
-      ...(replyTo ? { replyTo } : {}),
-      subject,
+      to: ownerEmail,
+      replyTo: data.email,
+      text: ownerText,
+      html: ownerHtml,
+      subject: ownerSubject,
     });
 
-    if (error) {
-      console.error("[contact] resend error", {
-        to: maskEmail(data.email),
-        error,
+    if (ownerError) {
+      console.error("[contact] resend owner error", {
+        to: maskEmail(ownerEmail),
+        error: ownerError,
       });
       return { ok: false, error: "Failed to send email." };
     }
 
-    console.log("[contact] email sent", { to: maskEmail(data.email) });
+    if (userAutoReplyEnabled) {
+      const userSubject = `We received your message: ${data.subject}`;
+      const userText = [
+        `Hi ${data.name},`,
+        "",
+        "Thanks for contacting us. We have received your message and will get back to you soon.",
+        "",
+        "Your submission:",
+        `- Name: ${data.name}`,
+        `- Email: ${data.email}`,
+        `- Subject / Business Name: ${data.subject}`,
+        "",
+        data.message.trim(),
+      ].join("\n");
+
+      const userHtml = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
+          <p>Hi ${safeName},</p>
+          <p>Thanks for contacting us. We have received your message and will get back to you soon.</p>
+          <hr />
+          <h3>Your submission</h3>
+          <p><strong>Name:</strong> ${safeName}</p>
+          <p><strong>Email:</strong> ${safeEmail}</p>
+          <p><strong>Subject / Business Name:</strong> ${safeSubject}</p>
+          <p><strong>Message:</strong></p>
+          <p>${safeMessageHtml}</p>
+        </div>
+      `;
+
+      const { error: userError } = await resend.emails.send({
+        from,
+        to: data.email,
+        replyTo: ownerEmail,
+        text: userText,
+        html: userHtml,
+        subject: userSubject,
+      });
+
+      if (userError) {
+        console.error("[contact] resend user error", {
+          to: maskEmail(data.email),
+          error: userError,
+        });
+      }
+    }
+
+    console.log("[contact] email sent", { toOwner: maskEmail(ownerEmail) });
     return { ok: true };
   } catch (error) {
     console.error("[contact] send error", {
-      to: maskEmail(data.email),
+      owner: maskEmail(ownerEmail ?? ""),
       error,
     });
     return { ok: false, error: "Failed to send email." };
@@ -115,4 +152,12 @@ function maskEmail(email: string) {
   const local = trimmed.slice(0, at);
   const domain = trimmed.slice(at + 1);
   return `${local[0]}***@${domain}`;
+}
+
+function parseBooleanEnv(value: string | undefined, defaultValue: boolean) {
+  if (!value) return defaultValue;
+  const normalized = value.trim().toLowerCase();
+  if (["1", "true", "yes", "y", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "n", "off"].includes(normalized)) return false;
+  return defaultValue;
 }

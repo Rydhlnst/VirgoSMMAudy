@@ -1,14 +1,14 @@
 "use client";
 
-import { ImagePlus, Trash2 } from "lucide-react";
+import { Trash2, Video } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useFormContext, useWatch } from "react-hook-form";
-import { ImageDropzone } from "@/components/cms/ImageDropzone";
+import { VideoDropzone } from "@/components/cms/VideoDropzone";
 
-export function ImageUrlInput({
+export function VideoUrlInput({
   name,
   label,
   helperText,
@@ -29,10 +29,10 @@ export function ImageUrlInput({
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={name}>{label}</Label>
       <div className="grid gap-2">
-        <ImageDropzone
+        <VideoDropzone
           onUploadedUrl={(url) => {
             setValue(name, url, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
-            toast.success("Image uploaded.");
+            toast.success("Video uploaded.");
           }}
         />
 
@@ -43,7 +43,7 @@ export function ImageUrlInput({
             size="sm"
             onClick={() => {
               setValue(name, "", { shouldDirty: true, shouldTouch: true, shouldValidate: true });
-              toast.success("Image cleared.");
+              toast.success("Video cleared.");
             }}
             disabled={!value}
           >
@@ -60,14 +60,14 @@ export function ImageUrlInput({
             previewClassName,
           )}
         >
-          <div className="relative overflow-hidden rounded-lg">
-            <img src={value} alt="Preview" className="h-40 w-full rounded-lg object-cover" loading="lazy" />
+          <div className="relative overflow-hidden rounded-lg bg-black/5">
+            <video src={value} controls className="h-40 w-full rounded-lg object-cover" preload="metadata" />
           </div>
         </div>
       ) : (
         <div className="mt-1 flex h-20 items-center justify-center rounded-xl border border-dashed border-[color:var(--border-subtle)] bg-[color:var(--overlay-1)] text-xs text-[color:var(--muted-foreground-weak)]">
-          <ImagePlus className="mr-2 h-4 w-4" />
-          No image selected
+          <Video className="mr-2 h-4 w-4" />
+          No video selected
         </div>
       )}
 

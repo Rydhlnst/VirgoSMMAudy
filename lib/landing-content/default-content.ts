@@ -69,7 +69,8 @@ const RAW_DEFAULT_LANDING_PAGE_CONTENT = {
     title: "PORTFOLIO",
     videoLabel: "VIDEOFOLIO",
     photoLabel: "PHOTOFOLIO",
-    emptyVideoText: "No video items yet.",
+    emptyVideoText: "No photo items yet.",
+    emptySocialText: "No social items yet.",
     emptyPhotoText: "No photo items yet.",
     items: [
       {

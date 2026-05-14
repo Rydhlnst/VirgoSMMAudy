@@ -83,12 +83,14 @@ export const portfolioSchema = z.object({
   videoLabel: z.string().min(1).default("VIDEOFOLIO"),
   photoLabel: z.string().min(1).default("PHOTOFOLIO"),
   emptyVideoText: z.string().min(1).default("No video items yet."),
+  emptySocialText: z.string().min(1).default("No social items yet."),
   emptyPhotoText: z.string().min(1).default("No photo items yet."),
   items: z
     .array(
       z
         .object({
-          type: z.enum(["video", "photo"]),
+          type: z.enum(["video", "photo", "social"]),
+          slot: z.enum(["top", "bottom"]).default("bottom"),
           title: z.string().min(1, "Title wajib diisi"),
           thumbnailUrl: imageSrcOrEmpty,
           link: z.string().url("Link tidak valid").or(z.literal("")).default(""),
@@ -125,7 +127,7 @@ export const portfolioSchema = z.object({
               message: "Untuk item video, link harus URL video (bukan gambar).",
             });
           }
-          if (val.type === "photo" && isVideo) {
+          if ((val.type === "photo" || val.type === "social") && isVideo) {
             ctx.addIssue({
               code: "custom",
               path: ["link"],
@@ -443,9 +445,6 @@ export const landingPageContentSchema = z.object({
     })
     .default({ images: {} }),
 });
-
-
-
 
 
 

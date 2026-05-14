@@ -2,8 +2,8 @@ import { Divider } from "@/components/landing/Divider";
 import { LandingShell } from "@/components/landing/LandingShell";
 import { readLandingPageContent } from "@/lib/landing-content/storage";
 import Link from "next/link";
-import { EditableImage } from "@/components/cms/EditableImage";
 import { EditableText } from "@/components/cms/EditableText";
+import { PortfolioItemsGridClient } from "./_components/PortfolioItemsGridClient";
 
 export const dynamic = "force-dynamic";
 
@@ -82,55 +82,7 @@ export default async function PortfolioPage() {
                 </Link>
               </div>
 
-              <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                {p.items.map((item, idx) => (
-                  <div
-                    key={`${item.title}-${idx}`}
-                    className="group rounded-[34px] border border-foreground/10 bg-card p-4 transition motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0"
-                  >
-                    <EditableImage
-                      path={`portfolio.items.${idx}.thumbnailUrl`}
-                      src={item.thumbnailUrl}
-                      alt={item.title}
-                      className="w-full"
-                      imgClassName="aspect-[4/3] w-full rounded-[26px] object-cover"
-                    />
-                    <div className="mt-4 flex items-center justify-between gap-4">
-                        <div className="min-w-0">
-                          <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">{item.type}</div>
-                          <EditableText
-                            as="div"
-                            path={`portfolio.items.${idx}.title`}
-                            value={item.title}
-                            className="mt-2 text-sm font-black text-foreground"
-                          />
-                          {item.caption ? (
-                            <EditableText
-                              as="div"
-                              path={`portfolio.items.${idx}.caption`}
-                              value={item.caption}
-                              className="mt-2 text-sm text-foreground/65"
-                            />
-                          ) : null}
-                        </div>
-                      {item.link?.length ? (
-                        <Link
-                          href={item.link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="shrink-0 rounded-full bg-accent px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground transition-colors transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:-rotate-1 hover:bg-[color:var(--accent)]/90 active:translate-y-0 active:rotate-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:hover:rotate-0 motion-reduce:active:scale-100"
-                        >
-                          <EditableText path="pages.portfolio.openLinkText" value={page.openLinkText} />
-                        </Link>
-                      ) : (
-                        <div className="shrink-0 rounded-full border border-foreground/10 bg-background px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.22em] text-foreground/60">
-                          <EditableText path="pages.portfolio.noLinkText" value={page.noLinkText} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <PortfolioItemsGridClient initialItems={p.items} page={page} />
             </div>
           </div>
         </div>

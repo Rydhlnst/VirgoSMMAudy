@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useEditModeContext } from "./EditModeProvider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Pencil, Trash2, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { VideoDropzone } from "@/components/cms/VideoDropzone";
@@ -18,6 +19,31 @@ type EditableVideoProps = {
   videoClassName?: string;
 };
 
+function getInstagramEmbedUrl(raw: string): string | null {
+  if (!raw) return null;
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return null;
+  }
+
+  const host = url.hostname.toLowerCase().replace(/^www\./, "");
+  if (host !== "instagram.com") return null;
+
+  const parts = url.pathname.split("/").filter(Boolean);
+  const kind = parts[0]?.toLowerCase();
+  const id = parts[1];
+  if (!id) return null;
+
+  // Most common: /reel/{id}/
+  if (kind === "reel" || kind === "reels") {
+    return `https://www.instagram.com/reel/${id}/embed`;
+  }
+
+  return null;
+}
+
 export function EditableVideo({
   path,
   src,
@@ -28,6 +54,7 @@ export function EditableVideo({
   const context = useEditModeContext();
   const [open, setOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
+  const [urlDraft, setUrlDraft] = React.useState("");
 
   React.useEffect(() => {
     setMounted(true);
@@ -37,8 +64,14 @@ export function EditableVideo({
   const currentSrc =
     typeof currentValue === "string" && currentValue.length > 0 ? currentValue : src || "";
 
+  React.useEffect(() => {
+    if (!open) return;
+    setUrlDraft(currentSrc);
+  }, [open, currentSrc]);
+
   const finalSrc = currentSrc;
   const showVideo = Boolean(finalSrc);
+  const instagramEmbedUrl = getInstagramEmbedUrl(finalSrc);
 
   const modalContent =
     context?.isEditMode && open && mounted
@@ -63,7 +96,25 @@ export function EditableVideo({
 
               <div className="grid flex-1 gap-4 overflow-y-auto p-4">
                 <div className="grid gap-2">
-                  <Label>Upload video</Label>
+                  <Label>Instagram reel URL or upload video</Label>
+
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      value={urlDraft}
+                      onChange={(e) => setUrlDraft(e.currentTarget.value)}
+                      placeholder="https://www.instagram.com/reel/..."
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        context.updateField(path, urlDraft.trim());
+                      }}
+                      className="shrink-0"
+                    >
+                      Set URL
+                    </Button>
+                  </div>
 
                   <VideoDropzone
                     onUploadedUrl={(url) => {
@@ -82,13 +133,22 @@ export function EditableVideo({
                   <div className="text-sm font-semibold">Preview</div>
                   <div className="mx-auto w-full max-w-[640px] overflow-hidden rounded-xl border border-[color:var(--border-subtle)] bg-black/5">
                     {finalSrc ? (
-                      <video
-                        src={finalSrc}
-                        poster={posterSrc}
-                        controls
-                        preload="metadata"
-                        className="h-[220px] w-full object-cover sm:h-[280px]"
-                      />
+                      instagramEmbedUrl ? (
+                        <iframe
+                          src={instagramEmbedUrl}
+                          title="Instagram reel preview"
+                          className="h-[420px] w-full bg-white sm:h-[520px]"
+                          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                        />
+                      ) : (
+                        <video
+                          src={finalSrc}
+                          poster={posterSrc}
+                          controls
+                          preload="metadata"
+                          className="h-[220px] w-full object-cover sm:h-[280px]"
+                        />
+                      )
                     ) : (
                       <Skeleton className="h-[220px] w-full sm:h-[280px]" />
                     )}
@@ -118,18 +178,27 @@ export function EditableVideo({
         }}
       >
         {showVideo ? (
-          <video
-            src={finalSrc}
-            poster={posterSrc}
-            className={cn(
-              "w-full object-cover",
-              videoClassName,
-              context?.isEditMode ? "cursor-pointer" : undefined,
-            )}
-            preload="metadata"
-            muted
-            playsInline
-          />
+          instagramEmbedUrl ? (
+            <iframe
+              src={instagramEmbedUrl}
+              title="Instagram reel"
+              className={cn("w-full bg-white", videoClassName, context?.isEditMode ? "cursor-pointer" : undefined)}
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            />
+          ) : (
+            <video
+              src={finalSrc}
+              poster={posterSrc}
+              className={cn(
+                "w-full object-cover",
+                videoClassName,
+                context?.isEditMode ? "cursor-pointer" : undefined,
+              )}
+              preload="metadata"
+              muted
+              playsInline
+            />
+          )
         ) : (
           <button
             type="button"
@@ -194,4 +263,3 @@ export function EditableVideo({
     </div>
   );
 }
-

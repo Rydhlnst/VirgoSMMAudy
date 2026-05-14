@@ -17,7 +17,11 @@ function PortfolioItemRow({
   onRemove: () => void;
 }) {
   const { register } = useFormContext();
-  const type = useWatch({ name: `portfolio.items.${idx}.type` as const }) as "photo" | "video" | undefined;
+  const type = useWatch({ name: `portfolio.items.${idx}.type` as const }) as
+    | "photo"
+    | "social"
+    | "video"
+    | undefined;
 
   return (
     <div className="grid gap-4 rounded-3xl border border-[color:var(--border)]/15 p-4">
@@ -31,10 +35,29 @@ function PortfolioItemRow({
             className="h-10 w-full rounded-2xl border border-[color:var(--border-subtle-2)] bg-[color:var(--card)] px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent)]"
             {...register(`portfolio.items.${idx}.type`)}
           >
+            <option value="social">social</option>
             <option value="photo">photo</option>
             <option value="video">video</option>
           </select>
         </div>
+
+        {type !== "video" ? (
+          <div className="grid gap-2">
+            <label className="text-sm font-medium" htmlFor={`portfolio.items.${idx}.slot`}>
+              Slot
+            </label>
+            <select
+              id={`portfolio.items.${idx}.slot`}
+              className="h-10 w-full rounded-2xl border border-[color:var(--border-subtle-2)] bg-[color:var(--card)] px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent)]"
+              {...register(`portfolio.items.${idx}.slot`)}
+            >
+              <option value="top">top</option>
+              <option value="bottom">bottom</option>
+            </select>
+          </div>
+        ) : (
+          <div className="hidden md:block" />
+        )}
 
         <TextField name={`portfolio.items.${idx}.title`} label="Title" placeholder="Project title" />
 
@@ -47,7 +70,7 @@ function PortfolioItemRow({
         ) : (
           <ImageUrlInput
             name={`portfolio.items.${idx}.link`}
-            label="Photo (optional)"
+            label={`${type === "social" ? "Social image" : "Photo"} (optional)`}
             helperText="Upload a photo file."
           />
         )}
@@ -84,7 +107,14 @@ export function PortfolioCMSForm() {
             variant="accent"
             size="sm"
             onClick={() => {
-              items.append({ type: "photo", title: "New Item", thumbnailUrl: "", link: "", caption: "" });
+              items.append({
+                type: "social",
+                slot: "top",
+                title: "New item",
+                thumbnailUrl: "",
+                link: "",
+                caption: "",
+              });
               crudToast.created("Portfolio item");
             }}
           >

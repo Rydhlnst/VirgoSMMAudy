@@ -363,7 +363,7 @@ export function EditableImage({
                     e.stopPropagation();
                     setOpen(true);
                   }}
-                  className="h-8 gap-2 rounded-full bg-[color:var(--card)] px-3 shadow-sm"
+                  className="h-8 gap-2 rounded-full bg-[color:var(--card)] px-3 shadow-sm transition-transform motion-reduce:transition-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"
                 >
                   <Pencil className="h-4 w-4" />
                   {showImage ? "Edit" : "Add"}
@@ -379,7 +379,7 @@ export function EditableImage({
                       e.stopPropagation();
                       context?.updateField(path, "");
                     }}
-                    className="h-8 rounded-full border-red-500/40 bg-card px-3 text-red-600 shadow-sm hover:bg-red-500/10"
+                    className="h-8 rounded-full border-red-500/40 bg-card px-3 text-red-600 shadow-sm transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:bg-red-500/10 active:translate-y-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"
                     aria-label="Remove image"
                   >
                     <Trash2 className="h-4 w-4" />

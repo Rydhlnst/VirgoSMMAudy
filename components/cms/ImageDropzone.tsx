@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { uploadFiles } from "@/lib/uploadthing";
 
 export function ImageDropzone({
   onUploadedUrl,
@@ -19,11 +18,23 @@ export function ImageDropzone({
   const [error, setError] = React.useState<string | null>(null);
 
   async function uploadFile(file: File) {
-    const res = await uploadFiles("imageUploader", { files: [file] });
-    const first = res[0];
-    const url =
-      (first as { serverData?: { url?: string } } | undefined)?.serverData?.url ??
-      (first as { ufsUrl?: string } | undefined)?.ufsUrl;
+    const form = new FormData();
+    form.append("file", file);
+
+    const response = await fetch("/api/admin/cms/uploads/image", {
+      method: "POST",
+      body: form,
+    });
+
+    const json = (await response.json()) as
+      | { success: true; data: { url: string } }
+      | { success: false; error?: { message?: string } };
+
+    if (!response.ok || !json.success) {
+      throw new Error(json.success ? "Upload failed." : (json.error?.message ?? "Upload failed."));
+    }
+
+    const url = json.data?.url;
     if (!url) throw new Error("Upload failed (missing uploaded url).");
 
     onUploadedUrl(url);

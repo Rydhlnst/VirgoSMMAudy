@@ -53,6 +53,7 @@ export function MeetTheTeamGridClient({
                 path={`pages.about.meetTeamMembers.${idx}.imageUrl`}
                 src={member.imageUrl}
                 alt={member.name}
+                cropAspect={1}
                 className="absolute inset-0"
                 imgClassName="absolute inset-0 h-full w-full rounded-[22px] object-cover"
               />
@@ -62,11 +63,13 @@ export function MeetTheTeamGridClient({
               <EditableText
                 path={`pages.about.meetTeamMembers.${idx}.name`}
                 value={member.name}
+                as="div"
                 className="hero-name text-xl"
               />
               <EditableText
                 path={`pages.about.meetTeamMembers.${idx}.role`}
                 value={member.role}
+                as="div"
                 className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-foreground/55"
               />
 
@@ -102,4 +105,3 @@ export function MeetTheTeamGridClient({
     </div>
   );
 }
-

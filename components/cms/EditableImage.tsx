@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useEditModeContext } from "./EditModeProvider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Pencil, Trash2, X } from "lucide-react";
+import { ImagePlus, Pencil, Trash2, X } from "lucide-react";
 import { ImageDropzone } from "@/components/cms/ImageDropzone";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -18,6 +18,7 @@ type EditableImageProps = {
   alt?: string;
   className?: string;
   imgClassName?: string;
+  cropAspect?: number;
 };
 
 type ImageMeta = {
@@ -59,6 +60,7 @@ export function EditableImage({
   alt,
   className,
   imgClassName,
+  cropAspect = 16 / 9,
 }: EditableImageProps) {
   const context = useEditModeContext();
   const [open, setOpen] = React.useState(false);
@@ -204,6 +206,7 @@ export function EditableImage({
 
                   <ImageDropzone
                     onUploadedUrl={(url) => {
+                      setImgFailed(false);
                       context.updateField(path, url);
                       handleResetCrop();
                     }}
@@ -213,7 +216,10 @@ export function EditableImage({
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => context.updateField(path, "")}
+                      onClick={() => {
+                        setImgFailed(false);
+                        context.updateField(path, "");
+                      }}
                     >
                       Remove
                     </Button>
@@ -238,7 +244,7 @@ export function EditableImage({
                         image={finalSrc}
                         crop={crop}
                         zoom={zoom}
-                        aspect={16 / 9}
+                        aspect={cropAspect}
                         minZoom={1}
                         maxZoom={3}
                         cropShape="rect"
@@ -307,7 +313,10 @@ export function EditableImage({
   return (
     <div className={cn(className)}>
       <div
-        className={cn("group relative", context?.isEditMode ? "select-none" : undefined)}
+        className={cn(
+          "group relative h-full w-full",
+          context?.isEditMode ? "select-none" : undefined,
+        )}
         onClick={(e) => {
           if (!context?.isEditMode) return;
           if (e.defaultPrevented) return;
@@ -321,12 +330,13 @@ export function EditableImage({
             src={finalSrc}
             alt={alt || "Editable image"}
             className={cn(
-              "w-full object-cover",
+              "h-full w-full object-cover",
               imgClassName,
               context?.isEditMode ? "cursor-pointer" : undefined,
             )}
             style={imgStyle}
             onError={() => setImgFailed(true)}
+            onLoad={() => setImgFailed(false)}
           />
         ) : (
           <button
@@ -338,12 +348,22 @@ export function EditableImage({
               setOpen(true);
             }}
             className={cn(
-              "block w-full",
+              "relative block h-full w-full",
               context?.isEditMode ? "cursor-pointer" : "cursor-default",
             )}
             aria-label={context?.isEditMode ? "Add image" : "Image placeholder"}
           >
-            <Skeleton className={cn("w-full", imgClassName)} />
+            <div
+              className={cn(
+                "flex h-full w-full items-center justify-center rounded-[inherit] border border-dashed border-[color:var(--border-subtle)] bg-[color:var(--overlay-1)]",
+                imgClassName,
+              )}
+            >
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
+                <ImagePlus className="h-4 w-4" />
+                {context?.isEditMode ? "Add image" : "No image"}
+              </div>
+            </div>
           </button>
         )}
 
@@ -377,6 +397,7 @@ export function EditableImage({
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
+                      setImgFailed(false);
                       context?.updateField(path, "");
                     }}
                     className="h-8 rounded-full border-red-500/40 bg-card px-3 text-red-600 shadow-sm transition-transform motion-reduce:transition-none hover:-translate-y-0.5 hover:bg-red-500/10 active:translate-y-0 active:scale-[0.99] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"

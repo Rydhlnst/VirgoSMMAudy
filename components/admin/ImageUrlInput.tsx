@@ -29,6 +29,20 @@ export function ImageUrlInput({
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={name}>{label}</Label>
       <div className="grid gap-2">
+        <input
+          type="url"
+          value={value ?? ""}
+          onChange={(event) => {
+            setValue(name, event.currentTarget.value, {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            });
+          }}
+          placeholder="https://example.com/image.jpg atau /uploads/cms/example.jpg"
+          className="h-10 w-full rounded-lg border border-[color:var(--border-subtle)] bg-[color:var(--card)] px-3 text-sm outline-none ring-0 transition focus:border-[color:var(--accent)]"
+        />
+
         <ImageDropzone
           onUploadedUrl={(url) => {
             setValue(name, url, { shouldDirty: true, shouldTouch: true, shouldValidate: true });

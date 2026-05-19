@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
 import { toErrorResponse } from "@/lib/api/errors";
 import { safeJson } from "@/lib/api/parse-request";
 import { errorResponse, successResponse } from "@/lib/api/response";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { cmsContentSchema } from "@/lib/cms/cms-content.schema";
-import { getCmsPageBySlug, updateCmsPageContent } from "@/lib/cms/cms-service";
+import { getCmsPageBySlug } from "@/lib/cms/cms-service";
+import { updateContentWithVersioning } from "@/lib/cms/versioning";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,24 +58,28 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ sl
   const { slug } = await params;
 
   try {
-    const page = await updateCmsPageContent(slug, parsed.data);
-    revalidatePath("/");
-    revalidatePath("/about");
-    revalidatePath("/services");
-    revalidatePath("/portfolio");
-    revalidatePath("/contact");
+    const result = await updateContentWithVersioning({
+      slug,
+      title: parsed.data.title,
+      nextContent: parsed.data.contentJson,
+      actor: admin.session?.user?.email ?? null,
+    });
+    const updated = await getCmsPageBySlug(slug);
 
     return successResponse(
       {
-        slug: page.slug,
-        title: page.title,
-        status: page.status,
-        contentJson: page.contentJson,
-        publishedAt: page.publishedAt,
-        createdAt: page.createdAt,
-        updatedAt: page.updatedAt,
+        slug: updated.slug,
+        title: parsed.data.title,
+        status: "published",
+        contentJson: updated.contentJson,
+        publishedAt: updated.publishedAt,
+        createdAt: updated.createdAt,
+        updatedAt: updated.updatedAt,
+        changedFields: result.changedFields,
+        changeSummary: result.changeSummary,
+        noChanges: result.noChanges,
       },
-      { message: "CMS page updated successfully." },
+      { message: result.noChanges ? "No changes detected." : "Changes saved as a new revision." },
     );
   } catch (error) {
     return toErrorResponse(error);

@@ -2,10 +2,13 @@
 
 import * as React from "react";
 import type { CmsContent } from "@/lib/cms/cms-content.types";
+import { diffContentPaths } from "@/lib/cms/content-audit";
 
 type SaveResult = {
   title: string;
   contentJson: CmsContent;
+  noChanges?: boolean;
+  changeSummary?: string[];
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -68,9 +71,11 @@ export type CmsEditState = {
   isSaving: boolean;
   saveMessage: string | null;
   saveError: string | null;
+  pendingPublishCount: number;
   updateField: (path: string, value: unknown) => void;
   getFieldValue: (path: string) => unknown;
   saveChanges: () => Promise<void>;
+  publishLatestDraft: () => Promise<void>;
   resetChanges: () => void;
 };
 
@@ -99,6 +104,7 @@ export function EditModeProvider({
   const [isSaving, setIsSaving] = React.useState(false);
   const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
   const [saveError, setSaveError] = React.useState<string | null>(null);
+  const [pendingPublishCount, setPendingPublishCount] = React.useState(0);
 
   const isDirty = React.useMemo(() => {
     return JSON.stringify(content) !== JSON.stringify(originalContent);
@@ -125,7 +131,13 @@ export function EditModeProvider({
     setSaveMessage(null);
 
     try {
-      const response = await fetch(`/api/admin/cms/pages/${slug}`, {
+      const changes = diffContentPaths(originalContent, content).filter((entry) => entry.path !== "$");
+      if (changes.length === 0) {
+        setSaveMessage("No changes.");
+        return;
+      }
+
+      const response = await fetch(`/api/admin/cms/pages/${slug}/content-paths`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -145,16 +157,23 @@ export function EditModeProvider({
       }
 
       setTitle(json.data.title);
-      setContent(json.data.contentJson);
       setOriginalContent(json.data.contentJson);
-      setSaveMessage("Changes saved.");
+      setContent(json.data.contentJson);
+      setPendingPublishCount(0);
+      if (json.data.noChanges) {
+        setSaveMessage("No changes detected.");
+      } else {
+        setSaveMessage(json.data.changeSummary?.[0] ?? "Changes saved as a new revision.");
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to save CMS content.";
       setSaveError(message);
     } finally {
       setIsSaving(false);
     }
-  }, [content, slug, title]);
+  }, [content, originalContent, slug, title]);
+
+  const publishLatestDraft = React.useCallback(async () => {}, []);
 
   const contextValue = React.useMemo<CmsEditState>(
     () => ({
@@ -165,11 +184,13 @@ export function EditModeProvider({
       isEditMode,
       isDirty,
       isSaving,
+      pendingPublishCount,
       saveMessage,
       saveError,
       updateField,
       getFieldValue,
       saveChanges,
+      publishLatestDraft,
       resetChanges,
     }),
     [
@@ -178,7 +199,9 @@ export function EditModeProvider({
       isDirty,
       isEditMode,
       isSaving,
+      pendingPublishCount,
       originalContent,
+      publishLatestDraft,
       resetChanges,
       saveChanges,
       saveError,

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useEditModeContext } from "./EditModeProvider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { ImagePlus, Pencil, Trash2, X } from "lucide-react";
 import { ImageDropzone } from "@/components/cms/ImageDropzone";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -66,6 +67,7 @@ export function EditableImage({
   const [open, setOpen] = React.useState(false);
   const [imgFailed, setImgFailed] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
+  const [urlDraft, setUrlDraft] = React.useState("");
 
   React.useEffect(() => {
     setMounted(true);
@@ -77,6 +79,11 @@ export function EditableImage({
 
   const finalSrc = currentSrc;
   const showImage = Boolean(finalSrc) && !imgFailed;
+
+  React.useEffect(() => {
+    if (!open) return;
+    setUrlDraft(finalSrc);
+  }, [open, finalSrc]);
 
   React.useEffect(() => {
     setImgFailed(false);
@@ -203,6 +210,27 @@ export function EditableImage({
               <div className="grid flex-1 gap-4 overflow-y-auto p-4">
                 <div className="grid gap-2">
                   <Label>Upload image</Label>
+
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      type="url"
+                      value={urlDraft}
+                      onChange={(e) => setUrlDraft(e.currentTarget.value)}
+                      placeholder="https://example.com/image.jpg atau /uploads/cms/..."
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const next = urlDraft.trim();
+                        setImgFailed(false);
+                        context.updateField(path, next);
+                      }}
+                      className="shrink-0"
+                    >
+                      Set URL
+                    </Button>
+                  </div>
 
                   <ImageDropzone
                     onUploadedUrl={(url) => {

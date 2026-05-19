@@ -86,19 +86,19 @@ export function CmsSaveBar() {
               {context.isSaving ? (
                 <span className="inline-flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Saving...
+                  Saving draft...
                 </span>
               ) : context.isDirty ? (
-                "Save changes"
-              ) : (
-                "No changes"
-              )}
+                  "Save Changes"
+                ) : (
+                  "No changes"
+                )}
             </Button>
           )}
         </div>
 
         {confirmOpen ? (
-          <div className="mt-2 text-xs text-[color:var(--muted-foreground)]">Confirm publish: save changes to public site?</div>
+          <div className="mt-2 text-xs text-[color:var(--muted-foreground)]">Saving will create a new revision version.</div>
         ) : null}
       </div>
     </div>

@@ -28,7 +28,7 @@ import { FooterCMSForm } from "./sections/FooterCMSForm";
 import { useCrudToast } from "./useCrudToast";
 
 type ApiResponse =
-  | { success: true; data: LandingPageContent }
+  | { success: true; data: LandingPageContent | { contentJson: LandingPageContent } }
   | {
       success: false;
       issues?: unknown;
@@ -38,6 +38,31 @@ type ApiResponse =
         details?: unknown;
       };
     };
+
+type RevisionItem = {
+  id: string;
+  versionNumber: number;
+  status: "draft" | "published" | "archived";
+  changeType: "create" | "update" | "publish" | "rollback";
+  changeSummary: string | null;
+  createdBy: string | null;
+  createdAt: string;
+  publishedAt: string | null;
+  previousValue: unknown;
+  newValue: unknown;
+  blockKey?: string;
+};
+
+type RevisionSaveGroup = {
+  saveId: string;
+  createdAt: string;
+  createdBy: string | null;
+  totalChanges: number;
+  draftCount: number;
+  publishedCount: number;
+  archivedCount: number;
+  items: Array<RevisionItem & { blockKey: string; blockPage: string }>;
+};
 
 export function LandingContentAdmin() {
   const crudToast = useCrudToast();
@@ -49,15 +74,68 @@ export function LandingContentAdmin() {
 
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
+  const [saveGroups, setSaveGroups] = React.useState<RevisionSaveGroup[]>([]);
+  const [selectedSaveId, setSelectedSaveId] = React.useState<string | null>(null);
+  const [revisionFilter, setRevisionFilter] = React.useState<"draft" | "published" | "history">("draft");
+  const [loadingRevisionSaves, setLoadingRevisionSaves] = React.useState(false);
+  const [changeSummary, setChangeSummary] = React.useState("");
+  const [selectedRevisionId, setSelectedRevisionId] = React.useState<string | null>(null);
+
+  const selectedSaveGroup = React.useMemo(
+    () => saveGroups.find((item) => item.saveId === selectedSaveId) ?? null,
+    [saveGroups, selectedSaveId],
+  );
+  const revisions = selectedSaveGroup?.items ?? [];
+  const selectedRevision = React.useMemo(
+    () => revisions.find((item) => item.id === selectedRevisionId) ?? null,
+    [revisions, selectedRevisionId],
+  );
+
+  const loadRevisionSaves = React.useCallback(async () => {
+    setLoadingRevisionSaves(true);
+    try {
+      const statusParam =
+        revisionFilter === "history" ? "history" : revisionFilter;
+      const res = await fetch(`/api/admin/cms/revision-saves?page=home&status=${statusParam}`, { cache: "no-store" });
+      const json = (await res.json()) as
+        | { success: true; data: { items: RevisionSaveGroup[] } }
+        | { success: false; error?: { message?: string } };
+      if (!json.success) {
+        toast.error(json.error?.message || "Failed to load revision saves");
+        setSaveGroups([]);
+        return;
+      }
+      setSaveGroups(json.data.items);
+      if (!selectedSaveId && json.data.items.length > 0) {
+        setSelectedSaveId(json.data.items[0].saveId);
+      } else if (selectedSaveId && !json.data.items.some((item) => item.saveId === selectedSaveId)) {
+        setSelectedSaveId(json.data.items[0]?.saveId ?? null);
+      }
+    } catch {
+      toast.error("Failed to load revision saves");
+      setSaveGroups([]);
+    } finally {
+      setLoadingRevisionSaves(false);
+    }
+  }, [revisionFilter, selectedSaveId]);
+
+  React.useEffect(() => {
+    void loadRevisionSaves();
+  }, [loadRevisionSaves]);
+
+  React.useEffect(() => {
+    setSelectedRevisionId(revisions[0]?.id ?? null);
+  }, [selectedSaveId, revisions]);
 
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch("/api/landing-content", { cache: "no-store" });
+        const res = await fetch("/api/admin/cms/pages/home", { cache: "no-store" });
         const json = (await res.json()) as ApiResponse;
         if (!cancelled && json.success) {
-          form.reset(json.data);
+          const content = "contentJson" in json.data ? json.data.contentJson : json.data;
+          form.reset(content);
         }
       } catch {
         toast.error("Failed to load content. Using default.");
@@ -74,12 +152,15 @@ export function LandingContentAdmin() {
     setSaving(true);
     try {
       const normalized = landingPageContentSchema.parse(values);
-      const res = await fetch("/api/admin/landing-content", {
-        method: "PUT",
+      const res = await fetch("/api/admin/cms/pages/home", {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(normalized),
+        body: JSON.stringify({
+          title: "Home",
+          contentJson: normalized,
+        }),
       });
       const json = (await res.json()) as ApiResponse;
       if (!json.success) {
@@ -87,12 +168,34 @@ export function LandingContentAdmin() {
         return;
       }
       crudToast.updated("Landing content");
-      form.reset(json.data);
+      const content = "contentJson" in json.data ? json.data.contentJson : json.data;
+      form.reset(content);
+      void loadRevisionSaves();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Save failed";
       toast.error(msg);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function rollbackRevision(revisionId: string) {
+    try {
+      const res = await fetch(`/api/admin/cms/revisions/${revisionId}/rollback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ changeSummary }),
+      });
+      const json = (await res.json()) as { success: boolean; error?: { message?: string } };
+      if (!json.success) {
+        toast.error(json.error?.message || "Rollback failed");
+        return;
+      }
+      crudToast.updated("Rollback completed");
+      setChangeSummary("");
+      void loadRevisionSaves();
+    } catch {
+      toast.error("Rollback failed");
     }
   }
 
@@ -126,6 +229,121 @@ export function LandingContentAdmin() {
           <Button type="button" variant="accent" onClick={form.handleSubmit(onSubmit)} disabled={saving || loading}>
             {saving ? "Saving..." : "Save All"}
           </Button>
+        </div>
+
+        <Separator className="my-4" />
+
+        <div className="grid gap-4 rounded-xl border border-[color:var(--border-subtle)] bg-[color:var(--background)]/40 p-3 sm:p-4 lg:grid-cols-[360px_1fr]">
+          <section className="rounded-xl border border-[color:var(--border-subtle)] bg-[color:var(--card)] p-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted-foreground-weak)]">Saved Revisions (Per Save)</div>
+              <Button type="button" variant="outline" onClick={() => void loadRevisionSaves()}>
+                Refresh
+              </Button>
+            </div>
+            <div className="mt-3 grid max-h-[70vh] gap-2 overflow-y-auto pr-1">
+              {loadingRevisionSaves ? <div className="text-sm text-[color:var(--muted-foreground)]">Loading saves...</div> : null}
+              {saveGroups.map((item) => (
+                <button
+                  key={item.saveId}
+                  type="button"
+                  onClick={() => {
+                    setSelectedSaveId(item.saveId);
+                    setSelectedRevisionId(null);
+                  }}
+                  className={`rounded-lg border p-3 text-left transition ${
+                    selectedSaveId === item.saveId
+                      ? "border-[color:var(--foreground)] bg-[color:var(--background)]"
+                      : "border-[color:var(--border-subtle)] bg-[color:var(--card)]"
+                  }`}
+                >
+                  <div className="text-sm font-semibold">
+                    Save {item.saveId.startsWith("legacy:") ? item.saveId : item.saveId.slice(0, 8)}
+                  </div>
+                  <div className="mt-1 text-xs text-[color:var(--muted-foreground)]">
+                    {new Date(item.createdAt).toLocaleString()} · {item.createdBy || "unknown"}
+                  </div>
+                  <div className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+                    Changes: {item.totalChanges} · Draft: {item.draftCount} · Published: {item.publishedCount}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-xl border border-[color:var(--border-subtle)] bg-[color:var(--card)] p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted-foreground-weak)]">Revision History & Preview</div>
+              <Tabs value={revisionFilter} onValueChange={(value) => setRevisionFilter(value as typeof revisionFilter)}>
+                <TabsList className="h-auto w-full justify-start gap-1 p-1">
+                  <TabsTrigger value="draft">Drafts</TabsTrigger>
+                  <TabsTrigger value="published">Published</TabsTrigger>
+                  <TabsTrigger value="history">History</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+            <textarea
+              className="mt-3 min-h-20 w-full rounded-lg border border-[color:var(--border-subtle)] bg-[color:var(--card)] p-3 text-sm"
+              value={changeSummary}
+              onChange={(event) => setChangeSummary(event.target.value)}
+              placeholder="Optional change summary for rollback..."
+            />
+            <div className="mt-3 grid gap-2">
+              {loadingRevisionSaves ? <div className="text-sm text-[color:var(--muted-foreground)]">Loading revisions...</div> : null}
+              {revisions.length === 0 && !loadingRevisionSaves ? (
+                <div className="text-sm text-[color:var(--muted-foreground)]">No revisions found for this save session.</div>
+              ) : null}
+              {revisions.map((revision) => (
+                <button
+                  key={revision.id}
+                  type="button"
+                  onClick={() => setSelectedRevisionId(revision.id)}
+                  className={`rounded-xl border p-3 text-left ${
+                    selectedRevisionId === revision.id
+                      ? "border-[color:var(--foreground)] bg-[color:var(--background)]"
+                      : "border-[color:var(--border-subtle)] bg-[color:var(--card)]"
+                  }`}
+                >
+                  <div className="text-sm font-semibold">
+                    v{revision.versionNumber} · {revision.status} · {revision.changeType}
+                  </div>
+                  <div className="mt-1 text-xs text-[color:var(--muted-foreground)]">
+                    {new Date(revision.createdAt).toLocaleString()} · {revision.createdBy || "unknown"}
+                  </div>
+                  <div className="mt-1 text-xs text-[color:var(--muted-foreground)]">{revision.blockKey}</div>
+                </button>
+              ))}
+            </div>
+            {selectedRevision ? (
+              <div className="mt-4 rounded-xl border border-[color:var(--border-subtle)] bg-[color:var(--background)]/60 p-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="text-sm font-semibold">Preview v{selectedRevision.versionNumber}</div>
+                  <div className="flex gap-2">
+                    <Button type="button" variant="outline" onClick={() => void rollbackRevision(selectedRevision.id)}>
+                      Rollback
+                    </Button>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+                  Created: {new Date(selectedRevision.createdAt).toLocaleString()}
+                  {selectedRevision.publishedAt ? ` · Published: ${new Date(selectedRevision.publishedAt).toLocaleString()}` : ""}
+                </div>
+                {selectedRevision.changeSummary ? (
+                  <div className="mt-2 text-xs text-[color:var(--muted-foreground)]">{selectedRevision.changeSummary}</div>
+                ) : null}
+                <div className="mt-3 grid gap-2 lg:grid-cols-2">
+                  <div className="rounded-lg border border-[color:var(--border-subtle)] bg-[color:var(--card)] p-2">
+                    <div className="text-xs font-semibold text-[color:var(--muted-foreground)]">Previous Value</div>
+                    <pre className="mt-1 max-h-40 overflow-auto text-xs">{JSON.stringify(selectedRevision.previousValue, null, 2)}</pre>
+                  </div>
+                  <div className="rounded-lg border border-[color:var(--border-subtle)] bg-[color:var(--card)] p-2">
+                    <div className="text-xs font-semibold text-[color:var(--muted-foreground)]">New Value</div>
+                    <pre className="mt-1 max-h-40 overflow-auto text-xs">{JSON.stringify(selectedRevision.newValue, null, 2)}</pre>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </section>
         </div>
       </div>
 

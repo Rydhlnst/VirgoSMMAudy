@@ -1,0 +1,25 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e7]
+      - heading "Admin Login" [level=3] [ref=e9]
+      - paragraph [ref=e10]: Sign in dengan akun admin untuk mengakses CMS.
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - img [ref=e13]
+        - generic [ref=e15]: Sesi kamu belum memiliki akses admin. Gunakan akun admin yang terdaftar.
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: Email
+          - textbox "Email" [ref=e19]:
+            - /placeholder: admin@domain.com
+        - generic [ref=e20]:
+          - generic [ref=e21]: Password
+          - textbox "Password" [ref=e22]:
+            - /placeholder: "********"
+        - button "Sign In" [ref=e23]:
+          - img [ref=e24]
+          - generic [ref=e27]: Sign In
+      - link "Back to landing page" [ref=e28] [cursor=pointer]:
+        - /url: /
+  - region "Notifications alt+T"

@@ -43,8 +43,8 @@ export function WorkProcessSection({ workProcess }: { workProcess: LandingPageCo
                   className="absolute inset-0"
                   imgClassName="absolute inset-0 h-full w-full rounded-[28px] object-cover"
                 />
-                <div className="absolute inset-0 bg-(--overlay-3)" />
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="pointer-events-none absolute inset-0 bg-(--overlay-3)" />
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                   <EditableText
                     as="div"
                     path={`workProcess.steps.${idx}.number`}

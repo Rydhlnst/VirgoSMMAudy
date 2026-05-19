@@ -1,8 +1,7 @@
 import { toErrorResponse } from "@/lib/api/errors";
-import { safeJson } from "@/lib/api/parse-request";
 import { errorResponse, successResponse } from "@/lib/api/response";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { readLandingPageContent, writeLandingPageContent } from "@/lib/landing-content/storage";
+import { readLandingPageContent } from "@/lib/landing-content/storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,7 +9,12 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const data = await readLandingPageContent();
-    return successResponse(data);
+    const response = successResponse(data, {
+      message: "Legacy endpoint. Use /api/admin/cms/pages/home for admin content reads.",
+    });
+    response.headers.set("X-API-Deprecated", "true");
+    response.headers.set("X-API-Replacement", "/api/admin/cms/pages/home");
+    return response;
   } catch (error) {
     return toErrorResponse(error);
   }
@@ -21,16 +25,9 @@ export async function PATCH(request: Request) {
   if (!admin.success) {
     return admin.response;
   }
-
-  const body = await safeJson(request);
-  if (body === null) {
-    return errorResponse("BAD_REQUEST", "Invalid JSON body.", 400);
-  }
-
-  try {
-    const data = await writeLandingPageContent(body);
-    return successResponse(data, { message: "Landing page content updated successfully." });
-  } catch (error) {
-    return toErrorResponse(error);
-  }
+  return errorResponse(
+    "ENDPOINT_DEPRECATED",
+    "PATCH /api/landing-page is deprecated. Use PATCH /api/admin/cms/pages/home.",
+    405,
+  );
 }

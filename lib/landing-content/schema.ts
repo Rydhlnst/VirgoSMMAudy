@@ -428,7 +428,7 @@ export const landingPageContentSchema = z.object({
   branding: brandingSchema,
   workProcess: workProcessSchema,
   contact: contactSchema,
-  footer: footerSchema,
+  footer: footerSchema.default({} as any),
   pages: pagesSchema,
   cmsMeta: z
     .object({
@@ -445,7 +445,6 @@ export const landingPageContentSchema = z.object({
     })
     .default({ images: {} }),
 });
-
 
 
 

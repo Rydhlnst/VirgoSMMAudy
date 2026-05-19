@@ -23,25 +23,32 @@ export default async function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[color:var(--background)]">
-      <div className="border-b border-[color:var(--border-subtle)] bg-[color:var(--card)]/90 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 py-4 sm:px-6">
-          <div>
-            <div className="text-sm font-black uppercase tracking-[0.2em] text-[color:var(--muted-foreground-weak)]">CMS Admin</div>
-            <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Content editor</div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button asChild variant="accent" className="rounded-full">
-              <Link href="/admin/pages/home/edit">Inline Edit</Link>
+      <div className="mx-auto grid min-h-screen w-full max-w-[1600px] grid-cols-1 lg:grid-cols-[260px_1fr]">
+        <aside className="border-r border-[color:var(--border-subtle)] bg-[color:var(--card)]/70 p-4 lg:p-6">
+          <div className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--muted-foreground-weak)]">CMS Dashboard</div>
+          <h1 className="mt-2 text-xl font-black tracking-tight">Admin Panel</h1>
+          <p className="mt-2 text-sm text-[color:var(--muted-foreground)]">Manage draft revisions and publish safely.</p>
+          <div className="mt-6 grid gap-2">
+            <Button asChild variant="accent" className="justify-start rounded-xl">
+              <Link href="/admin/pages/home/edit">Inline Editor</Link>
+            </Button>
+            <Button asChild variant="outline" className="justify-start rounded-xl">
+              <Link href="/">View Public Site</Link>
             </Button>
             <EditModeToggle goTo="/" />
-            <Button asChild variant="outline" className="rounded-full">
-              <Link href="/">View Site</Link>
-            </Button>
+          </div>
+        </aside>
+        <main className="min-w-0">
+          <div className="sticky top-0 z-20 flex items-center justify-between border-b border-[color:var(--border-subtle)] bg-[color:var(--card)]/90 px-4 py-4 backdrop-blur sm:px-6">
+            <div>
+              <div className="text-sm font-black uppercase tracking-[0.2em] text-[color:var(--muted-foreground-weak)]">Content Operations</div>
+              <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Draft, review, publish, and rollback from one place.</div>
+            </div>
             <AdminSessionActions email={adminSession.user.email} />
           </div>
-        </div>
+          <LandingContentAdmin />
+        </main>
       </div>
-      <LandingContentAdmin />
       <Toaster richColors position="top-right" />
     </div>
   );

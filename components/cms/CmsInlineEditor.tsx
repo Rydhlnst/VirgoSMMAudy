@@ -56,7 +56,7 @@ function InlineEditorCanvas() {
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[color:var(--border-subtle)] bg-[color:var(--card)] p-4">
           <div>
             <div className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--muted-foreground-weak)]">Inline CMS</div>
-            <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Slug: {context.slug} · Save = publish</div>
+            <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">Slug: {context.slug} · Save creates a new revision</div>
           </div>
           <div className="flex items-center gap-2">
             <Button asChild variant="outline">

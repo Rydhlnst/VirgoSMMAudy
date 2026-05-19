@@ -1,0 +1,3 @@
+[     197ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:4010/_next/static/chunks/0prs_next_dist_05bghtc._.js:2477
+[    2407ms] [LOG] [Fast Refresh] done in 2390ms @ http://localhost:4010/_next/static/chunks/0prs_next_dist_05bghtc._.js:2477
+[    3974ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ chrome-error://chromewebdata/:0

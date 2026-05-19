@@ -1,5 +1,6 @@
 import { cmsContentSchema } from "@/lib/cms/cms-content.schema";
-import { CMS_HOME_SLUG, getCmsPageBySlug, updateCmsPageContent } from "@/lib/cms/cms-service";
+import { CMS_HOME_SLUG, getCmsPageBySlug } from "@/lib/cms/cms-service";
+import { updateContentWithVersioning } from "@/lib/cms/versioning";
 import { DEFAULT_LANDING_PAGE_CONTENT } from "./default-content";
 import type { LandingPageContent } from "./types";
 
@@ -12,11 +13,16 @@ export async function readLandingPageContent(): Promise<LandingPageContent> {
   }
 }
 
-export async function writeLandingPageContent(payload: unknown): Promise<LandingPageContent> {
+export async function writeLandingPageContent(
+  payload: unknown,
+  options?: { actor?: string | null; title?: string },
+): Promise<LandingPageContent> {
   const parsed = cmsContentSchema.parse(payload);
-  const updated = await updateCmsPageContent(CMS_HOME_SLUG, {
-    title: "Home",
-    contentJson: parsed,
+  const result = await updateContentWithVersioning({
+    slug: CMS_HOME_SLUG,
+    title: options?.title ?? "Home",
+    nextContent: parsed,
+    actor: options?.actor ?? null,
   });
-  return updated.contentJson;
+  return result.contentJson as LandingPageContent;
 }

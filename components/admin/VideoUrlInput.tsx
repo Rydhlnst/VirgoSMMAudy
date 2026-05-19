@@ -4,6 +4,7 @@ import { Trash2, Video } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useFormContext, useWatch } from "react-hook-form";
 import { VideoDropzone } from "@/components/cms/VideoDropzone";
@@ -29,6 +30,19 @@ export function VideoUrlInput({
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={name}>{label}</Label>
       <div className="grid gap-2">
+        <Input
+          type="url"
+          value={value ?? ""}
+          onChange={(event) => {
+            setValue(name, event.currentTarget.value, {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            });
+          }}
+          placeholder="https://example.com/video.mp4 atau https://www.instagram.com/reel/..."
+        />
+
         <VideoDropzone
           onUploadedUrl={(url) => {
             setValue(name, url, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
